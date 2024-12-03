@@ -12,7 +12,7 @@ const ServerErrorSection = () => {
       </h1>
       <Image
         src={ServerError}
-        alt="error"
+        alt="thanks"
         className="object-cover rounded-[32px] w-[380px] lg:w-[580px]"
       />
       <Button

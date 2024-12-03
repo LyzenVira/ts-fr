@@ -20,7 +20,6 @@ const AboutUsSection = () => {
           height="auto"
           style={{ aspectRatio: "16/9", objectFit: "contain" }}
           allow="autoplay"
-          loading="lazy"
         ></iframe>
       </div>
     </section>
