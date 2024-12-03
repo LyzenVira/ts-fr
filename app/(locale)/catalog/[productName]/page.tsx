@@ -1,8 +1,8 @@
 import ProductSection from "@/app/sections/product-page/ProductSection";
 import { Product } from "@/config/types";
 import { getProducts } from "@/services/ProductService";
-import type { Metadata } from "next";
-import Head from "next/head";
+// import type { Metadata } from "next";
+// import Head from "next/head";
 
 
 // export async function generateMetadata({ params }: { params: { productName: string } }): Promise<Metadata> {
