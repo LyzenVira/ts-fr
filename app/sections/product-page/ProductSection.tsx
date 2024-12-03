@@ -127,10 +127,10 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
   return (
     <section>
-       <script
+       {/* <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-        />
+        /> */}
       <TitleComponents
         text="products"
         additionalText="Products / Product Number One"
