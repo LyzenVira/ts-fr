@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   authors: { name: "Timestone" },
   viewport: { initialScale: 1.0, width: "device-width" },
   icons: { icon: "" },
-  metadataBase: new URL("https://timestone.com"),
+  metadataBase: new URL("https://ts-fr.vercel.app"),
   openGraph: {
     title: "Timestone - онлайн-магазин годинників",
     description: "Найкращі годинники за доступною ціною",
