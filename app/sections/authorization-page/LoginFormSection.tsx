@@ -8,8 +8,8 @@ import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
 
 const LoginFormSection = () => {
-  const MAX_ATTEMPTS = 333;
-  const [value, setValue] = useState("");
+  const MAX_ATTEMPTS = 5;
+  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [loginMessage, setLoginMessage] = useState<string | null>(null);
@@ -51,11 +51,11 @@ const LoginFormSection = () => {
         if (response === "logged") {
           loginForm.reset();
           setLoginMessage(null);
-        } else if (response == "email not exist") {
+        } else if (response == "A user with this email address already exists") {
           setLoginMessage("This email does not exist. Try again.");
-        } else if (response == "incorrect password") {
+        } else if (response == "The password is incorrect") {
           setLoginMessage("Іncorrect password. Try again.");
-        } else if (response == "user not activated") {
+        } else if (response == "User not activated") {
           setLoginMessage("Your acc not activated. Check email box.");
         } else {
           setLoginMessage("Unexpected server error");
@@ -119,7 +119,7 @@ const LoginFormSection = () => {
             id="rememberMe"
             className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label>Remember me</label>
+          <label htmlFor="rememberMe">Remember me</label>
         </div>
       </div>
 

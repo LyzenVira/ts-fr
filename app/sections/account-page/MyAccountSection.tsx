@@ -164,7 +164,7 @@ const MyAccountSection = () => {
       return;
     }
 
-    const response = await updateUser( {
+    const response = await updateUser({
       lastname: values1.fullname,
       firstname: values1.name,
       email: values1.email,
@@ -220,7 +220,7 @@ const MyAccountSection = () => {
             <h1 className="text-black text-[32px] md:text-[46px] font-medium">
               Hey, {userName}
             </h1>
-            <p className="text-[12px] text-[#939393] md:text-[14px] text-center">
+            <p className="text-[12px] text-silver md:text-[14px] text-center">
               Welcome to your dashboard, your one-stop-shop for all your recent
               Timestone account activity.
             </p>
@@ -231,7 +231,7 @@ const MyAccountSection = () => {
             onSubmit={handleSubmit}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">My Info</h2>
+              <h2 className="mb-[20px] text-[24px] text-silver">My Info</h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
                 <div className="w-full lg:w-[45%] flex flex-col">
                   <Input
@@ -311,7 +311,7 @@ const MyAccountSection = () => {
               </div>
             </div>
             <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">
+              <h2 className="mb-[20px] text-[24px] text-silver">
                 Address Book
               </h2>
 
@@ -359,9 +359,10 @@ const MyAccountSection = () => {
                 <input
                   {...form.getInputProps("subscribe")}
                   type="checkbox"
+                  id="sign-up-update"
                   className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
                 />
-                <label className="ml-2 text-gray-700">
+                <label htmlFor="sign-up-update" className="ml-2 text-gray-700">
                   Sign-up to receive the latest updates and promotions
                 </label>
               </div>
@@ -374,7 +375,7 @@ const MyAccountSection = () => {
             onSubmit={handleSubmitPassword}
           >
             <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-              <h2 className="mb-[20px] text-[24px] text-[#939393]">
+              <h2 className="mb-[20px] text-[24px] text-silver">
                 New password
               </h2>
               <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
