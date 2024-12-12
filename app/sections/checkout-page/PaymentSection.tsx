@@ -55,7 +55,6 @@ const PaymentSection: FC<{
   const handlePay = () => {
     const { errors } = form.validate();
     if (Object.keys(errors).length > 0) {
-      console.log("Form has errors:", errors);
       return;
     }
   };
@@ -179,7 +178,7 @@ const PaymentSection: FC<{
             className="my-[30px] mini:w-[80%] w-[100%]"
             onClick={handleCompletePayment}
           />
-          <p className="text-[10px] text-silver text-center mini:w-[80%] w-[100%]">
+          <p className="text-[12px] text-silver text-center mini:w-[80%] w-[100%]">
             By placing your order you agree to our
             <span> </span>
             <a href="/legal" className="underline text-darkBurgundy">

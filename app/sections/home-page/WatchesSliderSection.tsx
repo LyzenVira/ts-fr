@@ -28,14 +28,14 @@ const SliderSection = () => {
     const fetchProducts = async () => {
       try {
         const response = await getProducts(
-          undefined,
-          undefined,
-          10,
-          undefined,
+          { productType: "", minPrice: 0, maxPrice: 0, searchText: "" },
+          "",
+          12,
+          "",
           "BEST_SELLING",
+          true,
           true
         );
-        console.log(response.products);
         setSliderProducts(response.products);
         setLoading(true);
       } catch (error) {
