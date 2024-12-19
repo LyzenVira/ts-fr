@@ -12,6 +12,7 @@ const config: Config = {
         lato: ['Lato', 'sans-serif'],
         poppins: ['Poppins', 'sans-serif'],
         spaceage: ['Space Age', 'sans-serif'],
+        frontrunner:['Frontrunner', 'sans-serif']
       },
       fontSize: {
         default: ['14px', { lineHeight: '18px' }],
@@ -27,25 +28,22 @@ const config: Config = {
         amethyst: '#7B51A6',
         darkerAmethyst: '#6C399E',
         silver: '#595959',
-        pearl: '#F9FAFE',
+        pearl: '#F5F5F5',
         coral: '#FF8585',
         onyx: '#000000',
         snow: '#ffffff',
         charcoal: '#202020',
         whisper: '#EAECF5',
-
-        //new colors
-
-        darkBurgundy: '#680A0A',
-        darkBurgundyOpacity: '#680A0A60',
-        darkMaroon: '#420808',
-        vividRed: '#EF2A2A',
-        cream: '#F2DEBA',
+        darkBurgundy: "#680A0A",
+        darkBurgundyOpacity: "#680A0A60",
+        darkMaroon: "#420808",
+        vividRed: "#EF2A2A",
+        cream: "#F2DEBA",
       },
       keyframes: {
         pulse: {},
       },
-      animation: {},
+      
     },
     screens: {
       mini: '520px',

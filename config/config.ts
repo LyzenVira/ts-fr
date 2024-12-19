@@ -1,8 +1,8 @@
 import axios from "axios";
 import { updateRefreshToken } from "@/services/AuthService";
 
-// export const BASE_URL = "http://localhost:4001";
-export const BASE_URL ="https://wellness.markets";
+export const BASE_URL = "http://localhost:4001";
+// export const BASE_URL = "https://wellness.markets";
 export const CLIENT_URL = "https://timestone.com";
 
 export const api = axios.create({
@@ -27,20 +27,22 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
-    console.log(1);
     const originalRequest = error.config;
-    console.log(originalRequest);
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
         const tokens = await updateRefreshToken();
-        if (tokens?.accessToken) {
-          localStorage.setItem("accessToken", tokens.accessToken);
-          localStorage.setItem("refreshToken", tokens.refreshToken);
+        console.log(tokens);
+
+        if (tokens?.newAccessToken) {
+          localStorage.setItem("accessToken", tokens.newAccessToken);
+          localStorage.setItem("refreshToken", tokens.newRefreshToken);
+        console.log( tokens.newAccessToken);
+
           originalRequest.headers[
             "Authorization"
-          ] = `Bearer ${tokens.accessToken}`;
+          ] = `Bearer ${tokens.newAccessToken}`;
           return api(originalRequest);
         } else {
           localStorage.setItem("accessToken", "");

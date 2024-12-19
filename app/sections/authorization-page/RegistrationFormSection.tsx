@@ -8,7 +8,7 @@ import { registrateNewUser } from "@/services/AuthService";
 import { addNewReceiver } from "@/services/SubscribeService";
 import { useForm } from "@mantine/form";
 import { isEmail, hasLength } from "@mantine/form";
-
+import { useDisclosure } from "@mantine/hooks";
 const months = [
   { value: "january", label: "January" },
   { value: "february", label: "February" },
@@ -50,7 +50,6 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
 
 const RegistrationFormSection = () => {
   const MAX_ATTEMPTS = 5;
-  // const [value, setValue] = useState("");
   const [attempts, setAttempts] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   const [registrationMessage, setRegistrationMessage] = useState<string | null>(
@@ -58,9 +57,10 @@ const RegistrationFormSection = () => {
   );
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [month, setMonth] = useState("february");
-  const [day, setDay] = useState("1");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
   const dayOptions = getDaysInMonth(month);
+  const [visible, { toggle }] = useDisclosure(false);
 
   const registrationForm = useForm({
     initialValues: {
@@ -68,6 +68,8 @@ const RegistrationFormSection = () => {
       lastName: "",
       phone: "",
       email: "",
+      month: "",
+      date: "",
       confirmEmail: "",
       password: "",
       confirmPassword: "",
@@ -80,7 +82,19 @@ const RegistrationFormSection = () => {
       email: isEmail("Invalid email"),
       confirmEmail: (value, values) =>
         value !== values.email ? "Emails must match" : null,
-      password: hasLength({ min: 6 }, "Must be at least 6 characters"),
+      password: (value) => {
+        if (/\s/.test(value)) return "Password must not contain spaces";
+        if (/[\u0400-\u04FF]/.test(value))
+          return "Cyrillic characters are not allowed";
+        if (value.length < 6) return "Minimum 6 characters required";
+        if (value.length > 20) return "Maximum 20 characters allowed";
+        if (!/[a-z]/.test(value))
+          return "Password must contain lowercase letter";
+        if (!/[A-Z]/.test(value))
+          return "Password must contain uppercase letter";
+        if (!/[0-9]/.test(value)) return "Password must contain digit";
+        return null;
+      },
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords must match" : null,
       phone: (value) =>
@@ -98,6 +112,10 @@ const RegistrationFormSection = () => {
           "inputRegistrationAttempts",
           newAttempts.toString()
         );
+        localStorage.setItem(
+          "inputRegistrationTime",
+          new Date().getTime().toString()
+        );
         setIsLoading(true);
         const address = "";
         const { firstName, lastName, email, phone, password, receiveUpdates } =
@@ -106,7 +124,7 @@ const RegistrationFormSection = () => {
         if (receiveUpdates === true) {
           await addNewReceiver(name, email);
         }
-        const dateOfBirth = `${month}, ${day}`;
+        const dateOfBirth = `${registrationForm.values.month}, ${registrationForm.values.date}`;
         const response = await registrateNewUser(
           firstName,
           lastName,
@@ -120,29 +138,47 @@ const RegistrationFormSection = () => {
         if (response === "created") {
           setIsModalVisible(true);
           registrationForm.reset();
-        } else if (response == "A user with this phone number already exists" ) {
+        } else if (response == "A user with this phone number already exists") {
           setRegistrationMessage("This phone already exist. Try another.");
-        } else if (response == "A user with this email address already exists") {
+        } else if (
+          response == "A user with this email address already exists"
+        ) {
           setRegistrationMessage("This email already exist. Try another.");
         } else if (response == "User not activated") {
           setRegistrationMessage("Your acc not activated. Check email box.");
         } else {
           setRegistrationMessage("Problems wih server");
-          
         }
       }
     }
   };
 
   useEffect(() => {
-    const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
-    if (savedAttempts) {
-      const parsedAttempts = Number(savedAttempts);
-      setAttempts(parsedAttempts);
-      if (parsedAttempts >= MAX_ATTEMPTS) {
-        setIsDisabled(true);
+    useEffect(() => {
+      const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
+      const savedTime = localStorage.getItem("inputRegistrationTime");
+
+      if (savedAttempts && savedTime) {
+        const parsedAttempts = Number(savedAttempts);
+        const lastAttemptTime = Number(savedTime);
+        const currentTime = new Date().getTime();
+        const timeElapsed = currentTime - lastAttemptTime;
+
+        if (timeElapsed > 96 * 60 * 60 * 1000) {
+          setAttempts(0);
+          localStorage.setItem("inputRegistrationAttempts", "0");
+        } else {
+          setAttempts(parsedAttempts);
+        }
+
+        if (parsedAttempts >= MAX_ATTEMPTS) {
+          setIsDisabled(true);
+        }
+      } else {
+        setAttempts(0);
       }
-    }
+    }, []);
+
     if (
       registrationForm.values.phone &&
       !registrationForm.values.phone.startsWith("+38")
@@ -167,8 +203,8 @@ const RegistrationFormSection = () => {
         />
       )}
 
-      <div className="text-center mb-[28px]">
-        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] text-darkMaroon font-bold mb-[20px]">
+      <div className="text-center mb-[48px]">
+        <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           NEW TO TIMESTONE ?
         </h2>
         <p className="text-silver">Create a new account</p>
@@ -200,25 +236,31 @@ const RegistrationFormSection = () => {
         <p className="text-start text-silver mt-[6px]">Date of birth</p>
         <div className="flex flex-col lg:flex-row gap-[10px] text-left">
           <Input
-            placeholder="January"
+            placeholder="Місяць"
             inputType="select"
             className="!w-full"
             bordered={true}
             options={months}
             value={month}
             scrollable={true}
-            onSelect={(value) => setMonth(value)}
+            onSelect={(value) => {
+              setMonth(value);
+              registrationForm.setFieldValue("moth", value);
+            }}
           />
 
           <Input
-            placeholder="01"
+            placeholder="Дата"
             inputType="select"
             className="!w-full"
             bordered={true}
             options={dayOptions}
             value={day}
             scrollable={true}
-            onSelect={(value) => setDay(value)}
+            onSelect={(value) => {
+              setDay(value);
+              registrationForm.setFieldValue("date", value);
+            }}
           />
         </div>
         <Input
@@ -233,63 +275,59 @@ const RegistrationFormSection = () => {
         />
 
         <div className="flex flex-col lg:flex-row gap-[10px]">
-          <div>
-            <Input
-              inputType="input"
-              placeholder="Email"
-              type="email"
-              fullWidth={true}
-              className="lg:min-w-[314px]"
-              bordered={true}
-              {...registrationForm.getInputProps("email")}
-              errorType="critical"
-              required={true}
-            />
-          </div>
+          <Input
+            inputType="input"
+            placeholder="Email"
+            type="email"
+            fullWidth={true}
+            className="lg:min-w-[314px]"
+            bordered={true}
+            {...registrationForm.getInputProps("email")}
+            errorType="critical"
+            required={true}
+          />
 
-          <div>
-            <Input
-              inputType="input"
-              placeholder="Confirm Email"
-              type="email"
-              fullWidth={true}
-              className="lg:min-w-[314px]"
-              bordered={true}
-              {...registrationForm.getInputProps("confirmEmail")}
-              errorType="critical"
-              required={true}
-            />
-          </div>
+          <Input
+            inputType="input"
+            placeholder="Confirm Email"
+            type="email"
+            fullWidth={true}
+            className="lg:min-w-[314px]"
+            bordered={true}
+            {...registrationForm.getInputProps("confirmEmail")}
+            errorType="critical"
+            required={true}
+          />
         </div>
 
         <div className="flex flex-col lg:flex-row gap-[10px]">
-          <div>
-            <Input
-              inputType="input"
-              placeholder="Password"
-              type="password"
-              fullWidth={true}
-              bordered={true}
-              className="lg:min-w-[314px]"
-              {...registrationForm.getInputProps("password")}
-              errorType="critical"
-              required={true}
-            />
-          </div>
+          <Input
+            inputType="password"
+            placeholder="Password"
+            type="password"
+            visible={visible}
+            onVisibilityChange={toggle}
+            fullWidth={true}
+            bordered={true}
+            className="lg:min-w-[314px]"
+            {...registrationForm.getInputProps("password")}
+            errorType="critical"
+            required={true}
+          />
 
-          <div>
-            <Input
-              inputType="input"
-              placeholder="Confirm Password"
-              type="password"
-              bordered={true}
-              fullWidth={true}
-              className="lg:min-w-[314px]"
-              {...registrationForm.getInputProps("confirmPassword")}
-              errorType="critical"
-              required={true}
-            />
-          </div>
+          <Input
+            inputType="password"
+            placeholder="Confirm Password"
+            type="password"
+            visible={visible}
+            onVisibilityChange={toggle}
+            bordered={true}
+            fullWidth={true}
+            className="lg:min-w-[314px]"
+            {...registrationForm.getInputProps("confirmPassword")}
+            errorType="critical"
+            required={true}
+          />
         </div>
 
         <div className="flex text-silver gap-[10px] mt-[10px] text-left">
@@ -300,9 +338,9 @@ const RegistrationFormSection = () => {
             onChange={(e) =>
               registrationForm.setFieldValue("receiveUpdates", e.target.checked)
             }
-            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+            className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
-          <label htmlFor="sign-up-update">
+          <label htmlFor="sign-up-update" className="cursor-pointer">
             Sign-up to receive the latest updates and promotions
           </label>
         </div>
@@ -315,10 +353,12 @@ const RegistrationFormSection = () => {
           )}
         </div>
 
-        <div className=" mt-[16px]">
+        <div className="mt-[16px]">
           <div>
             {registrationMessage && (
-              <span className={`block text-center text-darkBurgundy`}>
+              <span
+                className={`block text-center  text-[16px] text-darkBurgundy`}
+              >
                 {registrationMessage}
               </span>
             )}
@@ -327,12 +367,12 @@ const RegistrationFormSection = () => {
           <Button
             text="Create Account"
             type="button"
-            className="!w-[208px] mx-auto mt-[4px] mb-[24px] lg:mb-[56px]"
+            className="!w-[208px] mx-auto mt-[8px] mb-[24px] lg:mb-[56px]"
             onClick={() => {
               handleCreateAccount();
               window.scrollTo({
-                top: 0, 
-                behavior: "smooth", 
+                top: 0,
+                behavior: "smooth",
               });
             }}
             disabled={isDisabled}

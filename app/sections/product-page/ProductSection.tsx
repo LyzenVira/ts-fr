@@ -14,8 +14,6 @@ import { Metadata } from "next";
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
 
-//! потрібно зробити динамічно для кожного продукту
-
 export const metadata: Metadata = {
   title: "Timestone - продукт",
   description: "Пропонуємо найбільший вибір годиннників",
@@ -133,17 +131,20 @@ const ProductSection: FC<productProps> = ({ productName }) => {
     !isOpen && changeOpenState(true);
 
     if (product) {
-      addToCart({
-        id: product.id,
-        handle: product.handle,
-        title: product.title,
-        price: +product.price,
-        image: product.images[0],
-        quantity: quantity,
-        maxQuantity: maxQuantity,
-        caseColor: "red",
-        strapColor: "red",
-      });
+      addToCart(
+        {
+          id: product.id,
+          handle: product.handle,
+          title: product.title,
+          price: +product.price,
+          image: product.images[0],
+          quantity: quantity,
+          maxQuantity: maxQuantity,
+          caseColor: "red",
+          strapColor: "red",
+        },
+        quantity
+      );
     }
   };
 
@@ -222,22 +223,21 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 width={80}
                 className="my-[30px] mr-[50px] md:mr-[20px]"
               />
-            }
-          >
+            }>
             {slides}
           </Carousel>
         </div>
 
         <div className="flex flex-col items-center text-center">
           <h2 className="text-[32px]">{product?.title}</h2>
-          <p className="text-[12px] my-[20px] w-[350px] md:w-[400px] text-silver">
+          <p className="text-[14px] my-[20px] w-[350px] md:w-[400px] text-silver">
             {higherDescription ||
               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non."}
           </p>
 
-          <hr className="hidden xl:block w-[350px] md:w-[400px]" />
+          <hr className="block w-[350px] md:w-[400px]" />
 
-          <div className="my-[15px] w-[350px] md:w-[400px] order-1 xl:order-none text-silver text-[12px] text-center space-y-[10px]">
+          <div className="my-[15px] w-[350px] md:w-[400px] text-silver text-[14px] text-center space-y-[10px]">
             {lowerDescription.length != 0 ? (
               lowerDescription.map((property, index) => (
                 <div key={index} className="flex justify-between items-start">
@@ -246,15 +246,18 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 </div>
               ))
             ) : (
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl
-                tincidunt eget nullam non.
-              </p>
+              <>
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <div key={index} className="flex flex-wrap justify-evenly ">
+                    <span>{`——`}</span>
+                    <span>{`——`}</span>
+                  </div>
+                ))}
+              </>
             )}
           </div>
 
-          <hr className="hidden xl:block w-[400px]" />
+          <hr className="block w-[400px]" />
 
           <div className="flex my-[25px] space-x-[40px]">
             <div className="flex items-center border-2 rounded-md w-fit overflow-hidden">
@@ -264,8 +267,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity > 1 || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}
-              >
+                }`}>
                 -
               </button>
               <span className="w-10 h-10 rounded-sm flex items-center justify-center">
@@ -277,8 +279,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity < maxQuantity || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}
-              >
+                }`}>
                 +
               </button>
               {isOutOfStock && (

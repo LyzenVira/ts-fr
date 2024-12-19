@@ -1,8 +1,9 @@
 "use client";
 import Image from "next/image";
+import ReactDOM from "react-dom";
+import { useDisclosure } from "@mantine/hooks";
 import React, {useEffect, useState} from "react";
 import { MantineProvider, Modal } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 
 import Button from "../ButtonComponent";
 
@@ -15,12 +16,20 @@ interface OrderingComponentProps {
 
 const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title}) =>{
   const [opened, { open, close }] = useDisclosure(true);
-
-  return (
+  useEffect(() => {
+    if (opened) {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      
+    }
+  }, [opened]);
+  return ReactDOM.createPortal(
     <MantineProvider>
       {opened && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm z-[999]"
+          className="fixed inset-0 bg-black bg-opacity-5 backdrop-blur-sm z-50"
           onClick={close}
         />
       )}
@@ -32,10 +41,9 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
         classNames={{
           root: "top-[25%] md:top-[15%] z-[1000] absolute left-0 right-0 bottom-0 md:w-[80%] lg:w-[70%] xl:w-[51%]",
           body: "p-0",
-        }}
-      >
+        }}>
         <div className="flex flex-col items-center bg-white rounded-[32px] pt-[40px] ">
-          <h1 className="font-spaceage text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
+          <h1 className="font-frontrunner text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
             {title}
           </h1>
           <p className="text-center text-[#424551] font-poppins text-default text-[silver] px-[10px] mt-[5px] md:mt-0">
@@ -50,7 +58,8 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
           <Image src={Thanks} alt="thanks" className="object-cover rounded-[32px]" />
         </div>
       </Modal>
-    </MantineProvider>
+    </MantineProvider>,
+     document.body 
   );
 };
 

@@ -77,18 +77,17 @@ const OrderHistorySection = () => {
     <>
       <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
         <h1 className="text-black text-[32px] md:text-[46px] font-medium">
-          Your Order History
+          Ваша історія замовлень
         </h1>
         <p className="text-[12px] text-silver md:text-[14px] text-center">
-          Here you can find a summary of your past orders, track their status,
-          and manage returns or exchanges.
+        Тут ви можете знайти підсумок своїх попередніх замовлень, відстежувати їх статус.
         </p>
       </div>
       {loading ? (
         <>
           {orders.length === 0 && (
             <div className="flex justify-center font-bold text-[16px] md:text-[20px] lg:text-[24px] xl:text-[26px]">
-              No orders available
+              Немає замовлень
             </div>
           )}
           <Accordion transitionDuration={1000} chevron={false}>
@@ -101,8 +100,7 @@ const OrderHistorySection = () => {
                     <Accordion.Control className="mb-[3px] p-4 bg-white w-full border border-whisper border-solid rounded-lg">
                       <div
                         className="relative flex flex-row justify-between items-center"
-                        onClick={() => toggleOrderDetails(order.id)}
-                      >
+                        onClick={() => toggleOrderDetails(order.id)}>
                         <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-500">
                           {order.number}
                         </span>
@@ -110,8 +108,7 @@ const OrderHistorySection = () => {
                           {order.date}
                         </span>
                         <span
-                          className={`text-[10px] md:text-[12px] lg:text-[14px] py-1 px-2 rounded ${styles}`}
-                        >
+                          className={`text-[10px] md:text-[12px] lg:text-[14px] py-1 px-2 rounded ${styles}`}>
                           {text}
                         </span>
                         <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-800 font-semibold">
@@ -186,15 +183,6 @@ const OrderHistorySection = () => {
                           <span className="font-bold text-[12px] md:text-[14px] lg:text-[16px]">
                             Total: {order.total}
                           </span>
-                          {/* <span className="text-[12px] md:text-[14px] lg:text-[16px]">
-                        Shipping: {order.shipping}
-                      </span>
-                      <span className="text-[12px] md:text-[14px] lg:text-[16px]">
-                        Tax: {order.tax}
-                      </span>
-                      <span className="text-[12px] md:text-[14px] lg:text-[16px]">
-                        Subtotal: {order.subtotal}
-                      </span> */}
                         </div>
                       </div>
                     </Accordion.Panel>
