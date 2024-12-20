@@ -4,6 +4,7 @@ import { City, Street, Postomat, Department } from "@/config/types";
 
 export const getCities = async (city: string): Promise<City[]> => {
   try {
+	console.log("param pam pam")
     const { data } = await axios.get(`${BASE_URL}/cities`, {
       params: { city },
     });
