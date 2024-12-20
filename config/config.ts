@@ -33,12 +33,10 @@ api.interceptors.response.use(
 
       try {
         const tokens = await updateRefreshToken();
-      //   console.log(tokens);
 
         if (tokens?.newAccessToken) {
           localStorage.setItem("accessToken", tokens.newAccessToken);
           localStorage.setItem("refreshToken", tokens.newRefreshToken);
-      //   console.log( tokens.newAccessToken);
 
           originalRequest.headers[
             "Authorization"

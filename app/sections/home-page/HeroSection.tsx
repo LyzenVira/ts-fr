@@ -22,7 +22,6 @@ const SocialObject = [
 ];
 
 const Links: FC<HeroProps> = ({ className }) => {
-	console.log("tororo");
   return (
       <div
         className={`${className} flex gap-[10px] lg:gap-[90px] w-max justify-items-center`}
