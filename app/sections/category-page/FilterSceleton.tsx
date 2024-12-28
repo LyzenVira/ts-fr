@@ -8,7 +8,6 @@ const FiltersSkeleton: FC = () => {
           <div className="animate-pulse h-4 w-1/3 bg-gray-300 rounded-sm mb-2"></div>
           <div className="flex gap-2 items-center">
             <div className="animate-pulse h-8 w-full bg-gray-300 rounded-md"></div>
-            <div className="animate-pulse h-8 w-[50px] bg-gray-300 rounded-md"></div>
           </div>
         </div>
 
@@ -23,11 +22,10 @@ const FiltersSkeleton: FC = () => {
 
         <div>
           <div className="animate-pulse h-4 w-1/3 bg-gray-300 rounded-sm mb-2"></div>
-          <div className="flex gap-2 items-center">
-            <div className="animate-pulse h-8 w-[160px] bg-gray-300 rounded-md"></div>
+          <div className="flex gap-10 items-center">
+            <div className="animate-pulse h-8 w-[200px] bg-gray-300 rounded-md"></div>
             <div className="animate-pulse h-1 w-[20px] bg-gray-300"></div>
-            <div className="animate-pulse h-8 w-[160px] bg-gray-300 rounded-md"></div>
-            <div className="animate-pulse h-8 w-[50px] bg-gray-300 rounded-md"></div>
+            <div className="animate-pulse h-8 w-[200px] bg-gray-300 rounded-md"></div>
           </div>
         </div>
 

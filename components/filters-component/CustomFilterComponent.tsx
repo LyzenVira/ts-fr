@@ -56,14 +56,16 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
           className={`flex justify-between items-center ${
             type === "checkboxes" ? "cursor-pointer" : ""
           }`}
-          onClick={toggleOpen}>
+          onClick={toggleOpen}
+        >
           <h3 className="font-semibold text-[16px]">{title}</h3>
 
           {type === "checkboxes" && (
             <motion.div
               initial={{ rotate: 0 }}
               animate={{ rotate: isOpen ? 45 : 0 }}
-              transition={{ duration: 0.3 }}>
+              transition={{ duration: 0.3 }}
+            >
               <span className="text-4xl text-darkBurgundy !select-none">+</span>
             </motion.div>
           )}
@@ -81,7 +83,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             {searchQuery && (
               <button
                 onClick={clearSearchQuery}
-                className="absolute right-3 top-[55px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
+                className="absolute right-3 top-[55px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]"
+              >
                 ✕
               </button>
             )}
@@ -145,7 +148,8 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     activeButton === btn
                       ? "bg-darkBurgundy text-white"
                       : "bg-white text-darkBurgundy border-darkBurgundy border rounded-md"
-                  } py-[6px] px-[12px] text-sm font-medium rounded-md`}>
+                  } py-[6px] px-[12px] text-sm font-medium rounded-md`}
+                >
                   {btn}
                 </button>
               ))}
@@ -162,25 +166,30 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                 : { height: 0, opacity: 0 }
             }
             transition={{ duration: 0.3 }}
-            style={{ overflow: "hidden" }}>
+            style={{ overflow: "hidden" }}
+          >
             <div className="flex flex-col justify-start items-start overflow-y-scroll h-50">
-              {items?.map((item, index) => (
-                <label
-                  key={`${title.toLowerCase()}-${item}`}
-                  htmlFor={`checkbox-item-${title.toLowerCase()}-${item}`}
-                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200">
-                  <input
-                    id={`checkbox-item-${title.toLowerCase()}-${item}`}
-                    type="checkbox"
-                    className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
-                    checked={
-                      selectedItems ? selectedItems.includes(item) : false
-                    }
-                    onChange={() => onItemChange?.(item)}
-                  />
-                  <span className="first-letter:uppercase">{item}</span>
-                </label>
-              ))}
+              {items
+                ?.slice()
+                .sort((a, b) => a.localeCompare(b))
+                .map((item, index) => (
+                  <label
+                    key={`${title.toLowerCase()}-${item}`}
+                    htmlFor={`checkbox-item-${title.toLowerCase()}-${item}`}
+                    className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200"
+                  >
+                    <input
+                      id={`checkbox-item-${title.toLowerCase()}-${item}`}
+                      type="checkbox"
+                      className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
+                      checked={
+                        selectedItems ? selectedItems.includes(item) : false
+                      }
+                      onChange={() => onItemChange?.(item)}
+                    />
+                    <span className="first-letter:uppercase">{item}</span>
+                  </label>
+                ))}
             </div>
           </motion.div>
         )}
