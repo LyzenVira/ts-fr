@@ -6,14 +6,17 @@ const AboutUsSection = () => {
       id="about-us"
       className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] "
     >
-      <div className="flex flex-col text-center lg:text-left lg:w-[400px]">
+      <div className="flex flex-col text-center lg:text-left lg:w-[500px]">
         <h2 className="font-frontrunner mb-6 text-[28px] md:text-[35px] lg:text-[45px]">
-          Про нас 
+          Про нас
         </h2>
         <p className="text-gray-600 leading-7">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Accumsan
-          volutpat tristique metus, nibh massa quam iaculis lectus. A dui nam
-          phasellus porttitor nisi. Eget a quam est, eget dictum nisi.
+          Ми спеціалізуємося на продажу брендових годинників, пропонуючи
+          найкращі моделі від відомих світових виробників. Наша мета — надати
+          клієнтам високоякісні та стильні аксесуари, що підкреслюють
+          індивідуальність та статус. Ми працюємо тільки з перевіреними
+          брендами, забезпечуючи вас надійними і елегантними годинниками для
+          будь-якого випадку.
         </p>
       </div>
       <div className="w-[90%] rounded-xl overflow-hidden lg:w-[700px]">

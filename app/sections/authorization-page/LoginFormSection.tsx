@@ -1,10 +1,10 @@
 "use client";
-import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
-import { isEmail, hasLength } from "@mantine/form";
+import { useForm,isEmail } from "@mantine/form";
 import React, { useEffect, useState } from "react";
 
+import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import { loginUser } from "@/services/AuthService";
@@ -16,6 +16,7 @@ const LoginFormSection = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [visible, { toggle }] = useDisclosure(false);
+  const { setInfoMessage } = useAlert();
 
   const loginForm = useForm({
     initialValues: {
@@ -23,12 +24,12 @@ const LoginFormSection = () => {
       password: "",
     },
     validate: {
-      email: isEmail("Invalid email"),
+      email: isEmail("Неправильна електронна пошта"),
       password: (value) => {
-        if (/\s/.test(value)) return "Password can not contain spaces";
-        if (value.length < 6) return "Password must be at least 6 characters";
+        if (/\s/.test(value)) return "Пароль не повинен містити пробілів";
+        if (value.length < 6) return "Пароль повинен мати не меньше 6 символів";
         if (value.length > 20)
-          return "Password must not be more than 20 characters";
+          return "Пароль повинен мати не більше 20 символів";
       },
     },
   });
@@ -57,7 +58,7 @@ const LoginFormSection = () => {
       if (!rememberMe) {
         localStorage.removeItem("rememberedEmail");
       }
-      const response = await loginUser(email, password);
+      const response = await loginUser(email, password,setInfoMessage);
 
       setIsLoading(false);
       if (response === 200) {
@@ -68,13 +69,11 @@ const LoginFormSection = () => {
         router.push("/account");
         setLoginMessage(null);
       } else if (response == "A user with this email address already exists") {
-        setLoginMessage("This email does not exist. Try again.");
+        setLoginMessage("Користувач з такою електронною адресою уже існує. Спробуйте знову");
       } else if (response == "The password is incorrect") {
-        setLoginMessage("Іncorrect password. Try again.");
+        setLoginMessage("Некоректний пароль. Спробуйте знову");
       } else if (response == "User not activated") {
-        setLoginMessage("Your acc not activated. Check email box.");
-      } else {
-        setLoginMessage("Error with server.");
+        setLoginMessage("Ваш аккаунт не активований. Перевірьте вашу електронну скриньку");
       }
     }
   };
@@ -85,17 +84,16 @@ const LoginFormSection = () => {
 
       <div className="text-center mb-[48px]">
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
-          WELCOME BACK
+		  Ласкаво просимо! Увійдіть до свого акаунта
         </h2>
         <p className="leading-[2] text-silver">
-          Sign into your existing account to earn rewards, check existing orders
-          and more
+		  Увійдіть у свій існуючий акаунт, щоб перевіряти поточні замовлення та більше
         </p>
       </div>
       <div className="flex flex-col gap-[10px]">
         <Input
         inputType="input"
-        placeholder="Email"
+        placeholder="Електронна пошта"
         type="email"
         required={true}
         fullWidth={true}
@@ -109,7 +107,7 @@ const LoginFormSection = () => {
         inputType="password"
         visible={visible}
         onVisibilityChange={toggle}
-        placeholder="Password"
+        placeholder="Пароль"
         type="password"
         bordered={true}
         fullWidth={true}
@@ -131,14 +129,14 @@ const LoginFormSection = () => {
             className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
           <label htmlFor="rememberMe" className="cursor-pointer">
-            Remember me
+            Запам'ятати мене
           </label>
         </div>
         <div
           className="cursor-pointer hover:underline"
           onClick={() => router.push("/auth/forgot-me")}
         >
-          Forgot Password
+          Забули пароль
         </div>
       </div>
 
@@ -152,7 +150,7 @@ const LoginFormSection = () => {
         </div>
 
         <Button
-          text="Sign In"
+          text="Увійти"
           type="button"
           className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
           onClick={handleSignIn}

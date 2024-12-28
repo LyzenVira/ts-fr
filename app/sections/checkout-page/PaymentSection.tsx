@@ -22,12 +22,13 @@ const PaymentSection: FC<{
   useEffect(() => {
     if (paymentInfo) {
       localStorage.setItem("paymentInfo", JSON.stringify(paymentInfo));
+		setPaymentInfo(paymentInfo);
     }
   }, [paymentInfo]);
 
   const handleCompletePayment = () => {
     if (!paymentInfo) {
-      setError("Please select a payment method");
+      setError("Оберіть спосіб оплати!");
       completePayment(false);
     } else {
       setPaymentInfo(paymentInfo);
@@ -37,16 +38,16 @@ const PaymentSection: FC<{
   };
 
   const closeText =
-    paymentInfo == "LiqPay"
+    paymentInfo === "LiqPay"
       ? "LiqPay - оплата на картку"
-      : paymentInfo == "Post"
+      : paymentInfo === "Post"
       ? "Накладний платіж"
       : "";
 
   return (
     <>
       <FormComponent
-        title="Payment"
+        title="Оплата"
         isOpen={isOpen}
         toggleOpen={toggleOpen}
         closeText={closeText}
@@ -72,8 +73,8 @@ const PaymentSection: FC<{
 
         <div className="flex flex-col items-center gap-y-[15px]">
           <Button
-            text="Complete Payment"
-            className="my-[30px] mini:w-[80%] w-[100%]"
+            text="Оплатити"
+            className="my-[30px] w-[100%] mini:w-[80%]"
             onClick={() => {
               handleCompletePayment();
               const buttonContainer = document.getElementById(
@@ -82,21 +83,22 @@ const PaymentSection: FC<{
               if (buttonContainer) {
                 buttonContainer.scrollIntoView({
                   behavior: "smooth",
-                  block: "end", 
+                  block: "end",
                 });
               }
             }}
           />
-          <p className="text-[12px] text-silver text-center mini:w-[80%] w-[100%]">
-            By placing your order you agree to our
+          <p className="text-[12px] text-silver text-center w-[100%] mini:w-[80%]">
+            Оформлюючи замовлення, Ви погоджуюєтеся з нашими
             <span> </span>
             <a href="/legal" className="underline text-darkBurgundy">
-              Terms & Conditions
+              Положеннями та Умовами
             </a>
-            and you understand that we will process your personal data on the
-            basis of our<span> </span>
+            <span> </span>
+            та надаєте згоду на обробку вашої персональної інфомації на основі
+            нашої<span> </span>
             <a href="/privacy" className="text-darkBurgundy underline">
-              Privacy Policy
+              Політики Конфіденційності
             </a>
             .
           </p>

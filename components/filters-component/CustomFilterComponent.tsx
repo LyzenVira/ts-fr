@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
-import React, { FC, useState} from "react";
+import React, { FC, useState } from "react";
+
+import Plus from "@/images/vectors/plus.svg";
 
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
@@ -54,17 +56,15 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
           className={`flex justify-between items-center ${
             type === "checkboxes" ? "cursor-pointer" : ""
           }`}
-          onClick={toggleOpen}
-        >
+          onClick={toggleOpen}>
           <h3 className="font-semibold text-[16px]">{title}</h3>
 
           {type === "checkboxes" && (
             <motion.div
               initial={{ rotate: 0 }}
               animate={{ rotate: isOpen ? 45 : 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <span className="text-4xl text-darkBurgundy">+</span>
+              transition={{ duration: 0.3 }}>
+              <span className="text-4xl text-darkBurgundy !select-none">+</span>
             </motion.div>
           )}
         </div>
@@ -74,24 +74,22 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             <input
               className="rounded-sm bg-white py-[8px] border pl-3 pr-10 w-full border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
-              placeholder="Type Here"
+              placeholder="Напишіть сюда"
               value={searchQuery}
               onChange={(e) => onSearchChange?.(e.target.value)}
             />
             {searchQuery && (
               <button
                 onClick={clearSearchQuery}
-                className="absolute right-20 top-[60px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]"
-              >
+                className="absolute right-3 top-[55px] -translate-y-1/2 text-gray-500 hover:text-gray-700 text-[25px]">
                 ✕
               </button>
             )}
-            <button
+            {/* <button
               onClick={onApplyClick}
-              className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon"
-            >
+              className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon">
               OK
-            </button>
+            </button> */}
           </div>
         )}
 
@@ -123,12 +121,11 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                   max={limit[1]}
                 />
 
-                <button
+                {/* <button
                   onClick={onApplyClick}
-                  className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon"
-                >
+                  className="text-white px-4 p-2 border rounded-[4px] border-[#D7DADD] bg-darkBurgundy hover:bg-darkMaroon">
                   OK
-                </button>
+                </button> */}
               </div>
             </div>
           </>
@@ -148,8 +145,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     activeButton === btn
                       ? "bg-darkBurgundy text-white"
                       : "bg-white text-darkBurgundy border-darkBurgundy border rounded-md"
-                  } py-[6px] px-[12px] text-sm font-medium rounded-md`}
-                >
+                  } py-[6px] px-[12px] text-sm font-medium rounded-md`}>
                   {btn}
                 </button>
               ))}
@@ -166,15 +162,13 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                 : { height: 0, opacity: 0 }
             }
             transition={{ duration: 0.3 }}
-            style={{ overflow: "hidden" }}
-          >
+            style={{ overflow: "hidden" }}>
             <div className="flex flex-col justify-start items-start overflow-y-scroll h-50">
               {items?.map((item, index) => (
                 <label
                   key={`${title.toLowerCase()}-${item}`}
                   htmlFor={`checkbox-item-${title.toLowerCase()}-${item}`}
-                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200"
-                >
+                  className="flex gap-2 cursor-pointer w-full h-full px-3 py-2 hover:bg-gray-200 rounded-md  transition-all duration-200">
                   <input
                     id={`checkbox-item-${title.toLowerCase()}-${item}`}
                     type="checkbox"

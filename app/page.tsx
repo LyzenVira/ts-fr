@@ -6,17 +6,16 @@ import AboutUsSection from "./sections/home-page/AboutUsSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Timestone - головна сторінка",
+  title: "Montre d`Art - головна сторінка",
   description: "Дізнайтесь про нас більше",
   keywords: ["Годинники", "Чернівці", "онлайн-магазин"],
-  authors: { name: "Timestone" },
-  viewport: { initialScale: 1.0, width: "device-width" },
+  authors: { name: "Montre d`Art" },
   icons: { icon: "@/app/favicon.ico" },
   openGraph: {
-    title: "Timestone - онлайн-магазин годинників",
+    title: "Montre d`Art - онлайн-магазин годинників",
     description: "Найкращі годинники за доступною ціною",
-    url: "https://timestone.com",
-    siteName: "Timestone",
+    url: "https://wellness.markets",
+    siteName: "Montre d`Art",
     images: [
       {
         url: "",
@@ -28,6 +27,11 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
+
+export const generateViewport = () => ({
+	initialScale: 1.0,
+	width: "device-width",
+ });
 
 export default function Home() {
   return (

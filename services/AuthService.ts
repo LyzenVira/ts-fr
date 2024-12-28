@@ -1,6 +1,7 @@
 import axios from "axios";
 import { api } from "@/config/config";
 import { BASE_URL } from "@/config/config";
+import { InfoMessage } from "@/config/types";
 
 export const registrateNewUser = async (
   firstName: string,
@@ -9,7 +10,8 @@ export const registrateNewUser = async (
   phone: string,
   dateOfBirth: string,
   password: string,
-  address: string
+  address: string,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const result = await axios.post(`${BASE_URL}/auth/registration`, {
@@ -24,10 +26,15 @@ export const registrateNewUser = async (
     return "created";
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      if (error.status === 400 || error.status === 409) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 400 || error.status === 409) {
         return error.response?.data;
-      } else {
-        return "server error";
       }
     }
   }
@@ -35,7 +42,8 @@ export const registrateNewUser = async (
 
 export const loginUser = async (
   email: string,
-  password: string
+  password: string,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/login`, {
@@ -50,59 +58,81 @@ export const loginUser = async (
     }
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      if (error.status === 400 || error.status === 409) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 400 || error.status === 409) {
         return error.response?.data;
-      } else {
-        return "server error";
       }
     }
   }
 };
 
-export const activateAccount = async (token: string): Promise<any> => {
+export const activateAccount = async (
+  token: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/activate/${token}`);
     const { accessToken, refreshToken } = res.data;
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      }
+    }
     console.error("Error during account activation:", error);
   }
 };
 
 export const updateUser = async (userData: any): Promise<any> => {
-  try {
     const res = await api.post(`/auth/update`, userData);
     return res.status;
-  } catch (error) {
-    console.error("Error updating user:", error);
-  }
 };
 
 export const updatePassword = async (newPassword: string): Promise<any> => {
-  try {
-    const res = await api.post(`/auth/update-password`, {
-      password: newPassword,
-    });
-    return res;
-  } catch (error) {
-    console.error("Error updating password:", error);
-  }
+  const res = await api.post(`/auth/update-password`, {
+    password: newPassword,
+  });
+  return res;
 };
 
-export const updateRefreshToken = async (): Promise<any> => {
+
+export const updateRefreshToken = async (
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
-    const res = await axios.post(`${BASE_URL}/auth/refresh`, {refreshToken});
-	 
+    const res = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
+
     return res.data;
   } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      }
+    }
     console.error("Error refreshing token:", error);
   }
 };
 
 export const getUser = async (): Promise<any> => {
-  try {
     const accessToken = localStorage.getItem("accessToken");
 
     const res = await api.get(`/auth/user`, {
@@ -110,12 +140,7 @@ export const getUser = async (): Promise<any> => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-
     return res.data;
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-    throw error;
-  }
 };
 
 // export const googleLogin = async (googleToken: string): Promise<any> => {

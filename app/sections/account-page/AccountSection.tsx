@@ -59,6 +59,7 @@ const AccountSection = () => {
         return;
     }
   };
+  
   return (
     <>
       <section className="bg-pearl bg-opacity-50 min-h-screen">

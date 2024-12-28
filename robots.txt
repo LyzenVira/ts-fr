@@ -11,6 +11,6 @@ allow: /catalog/*,
 allow: /contact-us,
 allow: /legal
 
-sitemap: https://timestone.com/sitemap.xml
+sitemap: https://wellness.markets/sitemap.xml
 
 crawl-delay: 10

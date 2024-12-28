@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
-import Background from "@/images/authorization-page/bg-geomitrical.svg";
 import Image from "next/image";
+import React, { useState } from "react";
+
 import LoginFormSection from "@/app/sections/authorization-page/LoginFormSection";
 import RegistrationFormSection from "@/app/sections/authorization-page/RegistrationFormSection";
+
+import Background from "@/images/authorization-page/bg-geomitrical.svg";
 
 const AuthorizationSection = () => {
   const [isLoginPage, setIsLoginPage] = useState(true);
@@ -23,7 +25,7 @@ const AuthorizationSection = () => {
 
       <form className="flex flex-col bg-snow w-[350px] md:w-[600px] lg:w-[860px] ring-[20px] ring-snow text-center border-[2px] border-gray-300 rounded-[10px] z-10 px-[20px] lg:px-[110px] mb-[174px]">
         <div className="mb-[28px] lg:flex lg:space-between mt-[24px] lg:mt-[60px] items-center">
-          {["Login", "Create Account"].map((title, index) => {
+          {["Увійти", "Зареєструватися"].map((title, index) => {
             const isActive = isLoginPage ? index === 0 : index === 1;
             return (
               <div

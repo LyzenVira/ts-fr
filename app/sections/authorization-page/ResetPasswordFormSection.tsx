@@ -1,18 +1,18 @@
 "use client";
-import { useForm } from "@mantine/form";
-import { Loader } from "@mantine/core";
-import React, { useEffect, useState } from "react";
-import Background from "@/images/authorization-page/bg-geomitrical.svg";
 import Image from "next/image";
-import Button from "@/components/ButtonComponent";
-import Input from "@/components/InputComponent";
-import LoaderComponent from "@/components/LoaderComponent";
-import { useDisclosure } from "@mantine/hooks";
-import {
-  checkResetToken,
-  resetForgetPassword,
-} from "@/services/ForgotMeService";
+import { Loader } from "@mantine/core";
+import { useForm } from "@mantine/form";
 import { useRouter } from "next/navigation";
+import { useDisclosure } from "@mantine/hooks";
+import React, { useEffect, useState } from "react";
+
+import { useAlert } from "@/hooks/alertContext";
+import Input from "@/components/InputComponent";
+import Button from "@/components/ButtonComponent";
+import LoaderComponent from "@/components/LoaderComponent";
+import {checkResetToken,resetForgetPassword} from "@/services/ForgotMeService";
+
+import Background from "@/images/authorization-page/bg-geomitrical.svg";
 
 const ResetPasswordFormSection = ({
   resetPasswordToken,
@@ -25,7 +25,8 @@ const ResetPasswordFormSection = ({
   const [isLoader, setIsLoader] = useState<boolean>(true);
   const [visible, { toggle }] = useDisclosure(false);
   const [isTokenValid, setIsTokenValid] = useState<boolean>(false);
-  // const [isLoadin, setIsLoading] =
+  const { setInfoMessage } = useAlert();
+
   const resetPasswordForm = useForm({
     initialValues: {
       password: "",
@@ -34,20 +35,20 @@ const ResetPasswordFormSection = ({
 
     validate: {
       password: (value) => {
-        if (/\s/.test(value)) return "Password must not contain spaces";
-        if (/[\u0400-\u04FF]/.test(value))
-          return "Cyrillic characters are not allowed";
-        if (value.length < 6) return "Minimum 6 characters required";
-        if (value.length > 20) return "Maximum 20 characters allowed";
-        if (!/[a-z]/.test(value))
-          return "Password must contain lowercase letter";
-        if (!/[A-Z]/.test(value))
-          return "Password must contain uppercase letter";
-        if (!/[0-9]/.test(value)) return "Password must contain digit";
-        return null;
-      },
-      confirmPassword: (value, values) =>
-        value !== values.password ? "Passwords must match" : null,
+			if (/\s/.test(value)) return "Пароль не може містити пробілів";
+			if (/[\u0400-\u04FF]/.test(value))
+			  return "Не дозволяються кириличні символи";
+			if (value.length < 6) return "Мінімум 6 символів";
+			if (value.length > 20) return "Максимум 20 символів";
+			if (!/[a-z]/.test(value))
+			  return "Пароль повинен містити маленьку літеру";
+			if (!/[A-Z]/.test(value))
+			  return "Пароль повинен містити велику літеру";
+			if (!/[0-9]/.test(value)) return "Пароль повинен містити цифру";
+			return null;
+		 },
+		 confirmPassword: (value, values) =>
+			value !== values.password ? "Паролі повинні співпадати" : null,		 
     },
   });
 
@@ -55,7 +56,7 @@ const ResetPasswordFormSection = ({
     const validateToken = async () => {
       try {
         setIsLoader(true);
-        const res = await checkResetToken(resetPasswordToken);
+        const res = await checkResetToken(resetPasswordToken, setInfoMessage);
         if (res === true) {
           setIsTokenValid(true);
           setIsLoader(false);
@@ -78,18 +79,20 @@ const ResetPasswordFormSection = ({
     if (!errors.hasErrors) {
       setIsLoading(true);
       const { password } = resetPasswordForm.values;
-      const response = await resetForgetPassword(resetPasswordToken, password);
+      const response = await resetForgetPassword(
+        resetPasswordToken,
+        password,
+        setInfoMessage
+      );
       setIsLoading(false);
       if (response === 200) {
-        resetPasswordForm.reset();
-        router.push("/auth");
-      } else if (response == "No user found with this reset token") {
-        setForgotMeMessage("User not found. Try again.");
-      } else if (response == "Can not set same password") {
-        setForgotMeMessage("The password should be different.");
-      } else {
-        setForgotMeMessage("Error with server.");
-      }
+			resetPasswordForm.reset();
+			router.push("/auth");
+		 } else if (response == "No user found with this reset token") {
+			setForgotMeMessage("Користувача не знайдено. Спробуйте ще раз.");
+		 } else if (response == "Can not set same password") {
+			setForgotMeMessage("Пароль повинен відрізнятися.");
+		 }		 
     }
   };
 
@@ -116,14 +119,14 @@ const ResetPasswordFormSection = ({
 
             <div className="text-center mb-[26px] mt-[40px]">
               <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
-                RESET PASSWORD
+                ВІДНОВЛЕННЯ ПАРОЛЮ
               </h2>
-              <p className="leading-[2] text-silver">Enter your new password</p>
+              <p className="leading-[2] text-silver">Введіть ваш новий пароль</p>
             </div>
 
             <Input
               inputType="password"
-              placeholder="Password"
+              placeholder="Новий пароль"
               type="password"
               visible={visible}
               onVisibilityChange={toggle}
@@ -136,7 +139,7 @@ const ResetPasswordFormSection = ({
             />
             <Input
               inputType="password"
-              placeholder="Confirm Password"
+              placeholder="Підтвердіть пароль"
               type="password"
               visible={visible}
               onVisibilityChange={toggle}
@@ -160,7 +163,7 @@ const ResetPasswordFormSection = ({
               </div>
 
               <Button
-                text="Reset Password"
+                text="Відновити пароль"
                 type="button"
                 className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
                 onClick={handleResetPassword}
@@ -172,7 +175,7 @@ const ResetPasswordFormSection = ({
         <>
           {" "}
           <div className="container flex justify-center">
-            <p className="mt-[20px] text-[24px]">Your token expired !</p>
+            <p className="mt-[20px] text-[24px]">Час вашого токена сплинув!</p>
           </div>
         </>
       )}

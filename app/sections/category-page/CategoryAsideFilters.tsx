@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 
 import { CardProps } from "@/config/types";
+import FiltersSkeleton from "./FilterSceleton";
+import { useAlert } from "@/hooks/alertContext";
 import Button from "@/components/ButtonComponent";
 import { getProducts } from "@/services/ProductService";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
@@ -44,6 +46,19 @@ const CategoryAsideFilters = ({
   const [checkboxes, setCheckboxes] = useState<Record<string, string[]>>({});
   const [previousPage, setPreviousPage] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const { setInfoMessage } = useAlert();
+  const [isReset, setIsReset] = useState(false);
+
+  useEffect(() => {
+    if (isReset) {
+      const getData = async () => {
+        await getProductData(true);
+      };
+      getData();
+
+      setIsReset(false);
+    }
+  }, [isReset]);
 
   useEffect(() => {
     if (isFilter) {
@@ -65,7 +80,7 @@ const CategoryAsideFilters = ({
 
   useEffect(() => {
     if (isFilter) {
-    setPriceRangeFromObject(filtersData.priceRange.value);
+      setPriceRangeFromObject(filtersData.priceRange.value);
     }
   }, [filtersData]);
 
@@ -98,10 +113,10 @@ const CategoryAsideFilters = ({
     setSearchText("");
     setProductType("");
     setSort("RELEVANCE");
-    setReverse(true);
     setPriceRangeFromObject(filtersData.priceRange.value);
     setCheckboxes({});
-    await getProductData(true);
+    setReverse(true);
+    setIsReset(true);
   };
 
   const getProductData = async (isForm: boolean) => {
@@ -117,7 +132,10 @@ const CategoryAsideFilters = ({
         ? Object.entries(checkboxes)
             .flatMap(([key, values]) =>
               values.map(
-                (value) => `${key.toLowerCase()}-${value.toLowerCase()}`
+                (value) =>
+                  `${key.replace(" ", "_").toLowerCase()}-${value
+                    .replace(" ", "_")
+                    .toLowerCase()}`
               )
             )
             .join(" ")
@@ -132,7 +150,8 @@ const CategoryAsideFilters = ({
         "",
         sort,
         reverse,
-        true
+        true,
+        setInfoMessage
       );
       setCurrentPage(1);
     } else if (previousPage < currentPage) {
@@ -143,7 +162,8 @@ const CategoryAsideFilters = ({
         pageInfo.endCursor,
         sort,
         reverse,
-        true
+        true,
+        setInfoMessage
       );
     } else {
       data = await getProducts(
@@ -153,7 +173,8 @@ const CategoryAsideFilters = ({
         pageInfo.startCursor,
         sort,
         reverse,
-        false
+        false,
+        setInfoMessage
       );
     }
     setPreviousPage(currentPage);
@@ -199,183 +220,183 @@ const CategoryAsideFilters = ({
 
   return (
     <>
-      {isFilter && (
-        <aside className="hidden w-[30%] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
-          <form
-            onSubmit={handleSubmitFormForPc}
-            className="pb-5 flex flex-col gap-5 font-poppins "
-          >
-            {filtersData.search.title && (
-              <CustomFilterComponent
-                title={filtersData.search.title}
-                type="search"
-                searchQuery={searchText}
-                onSearchChange={newHandleSearchText}
-                clearSearchQuery={() => setSearchText("")}
-                onApplyClick={handleSubmitFilters}
-              />
-            )}
-            {filtersData.buttons.title && (
-              <CustomFilterComponent
-                title={filtersData.buttons.title}
-                type="buttons"
-                items={filtersData.buttons.value}
-                activeButton={productType}
-                onChangeButton={changeProductType}
-              />
-            )}
-            {filtersData.priceRange.title && (
-              <CustomFilterComponent
-                title={filtersData.priceRange.title}
-                type="price"
-                limit={filtersData.priceRange.value}
-                rangeValue={priceRangeFromObject}
-                step={1}
-                onRangeChange={handlePriceChange}
-                onApplyClick={handleSubmitFilters}
-              />
-            )}
-            {filtersData.checkboxes.length > 0 &&
-              filtersData.checkboxes.map((item: any) => (
+      {!isFilter ? (
+        <FiltersSkeleton />
+      ) : (
+        <>
+          <aside className="hidden w-[480px] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+            <form
+              onSubmit={handleSubmitFormForPc}
+              className="pb-5 flex flex-col gap-5 font-poppins ">
+              {filtersData.search.title && (
                 <CustomFilterComponent
-                  key={item.title}
-                  title={item.title}
-                  type="checkboxes"
-                  items={item.value}
-                  selectedItems={checkboxes[item.title]}
-                  onItemChange={(value: string) =>
-                    handleCheckboxChange(item.title, value)
-                  }
+                  title={filtersData.search.title}
+                  type="search"
+                  searchQuery={searchText}
+                  onSearchChange={newHandleSearchText}
+                  clearSearchQuery={() => setSearchText("")}
+                  onApplyClick={handleSubmitFilters}
                 />
-              ))}
-            <div className="flex flex-row gap-[10px]">
-              <Button
-                text="Скидання"
-                className="w-[30%] text-[16px] font-medium"
-                type="submit"
-                background="white"
-                bordered
-                onClick={handleResetFilters}
-              />
-              <Button
-                text="Підтверження"
-                className="w-[70%] text-[16px] font-medium"
-                type="submit"
-              />
-            </div>
-          </form>
-        </aside>
-      )}
-      {isFilter && (
-        <div className="z-20 top-0 xl:hidden bg-pearl">
-          <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
-            <form onSubmit={handleSubmitFormForMobile}>
-              <motion.div
-                className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
-                  isOpen ? "pt-5" : ""
-                }`}
-                initial={{
-                  opacity: 0,
-                  height: 0,
-                  visibility: "hidden",
-                  translateY: "-500px",
-                }}
-                animate={{
-                  opacity: isOpen ? 1 : 0,
-                  height: isOpen ? "fit-content" : 0,
-                  visibility: isOpen ? "visible" : "hidden",
-                  translateY: isOpen ? "0" : "-500px",
-                }}
-                transition={{ duration: 0.5 }}
-              >
-                {filtersData.search.title && (
+              )}
+              {filtersData.buttons.title && (
+                <CustomFilterComponent
+                  title={filtersData.buttons.title}
+                  type="buttons"
+                  items={filtersData.buttons.value}
+                  activeButton={productType}
+                  onChangeButton={changeProductType}
+                />
+              )}
+              {filtersData.priceRange.title && (
+                <CustomFilterComponent
+                  title={filtersData.priceRange.title}
+                  type="price"
+                  limit={filtersData.priceRange.value}
+                  rangeValue={priceRangeFromObject}
+                  step={1}
+                  onRangeChange={handlePriceChange}
+                  onApplyClick={handleSubmitFilters}
+                />
+              )}
+              {filtersData.checkboxes.length > 0 &&
+                filtersData.checkboxes.map((item: any) => (
                   <CustomFilterComponent
-                    title={filtersData.search.title}
-                    type="search"
-                    searchQuery={searchText}
-                    onSearchChange={newHandleSearchText}
-                    clearSearchQuery={() => setSearchText("")}
-                    onApplyClick={handleSubmitFilters}
+                    key={item.title}
+                    title={item.title}
+                    type="checkboxes"
+                    items={item.value}
+                    selectedItems={checkboxes[item.title]}
+                    onItemChange={(value: string) =>
+                      handleCheckboxChange(item.title, value)
+                    }
                   />
-                )}
-
-                {filtersData.buttons.title && (
-                  <CustomFilterComponent
-                    title={filtersData.buttons.title}
-                    type="buttons"
-                    items={filtersData.buttons.value}
-                    activeButton={productType}
-                    onChangeButton={changeProductType}
-                  />
-                )}
-
-                {filtersData.priceRange.title && (
-                  <CustomFilterComponent
-                    title={filtersData.priceRange.title}
-                    type="price"
-                    limit={filtersData.priceRange.value}
-                    rangeValue={priceRangeFromObject}
-                    step={1}
-                    onRangeChange={handlePriceChange}
-                    onApplyClick={handleSubmitFilters}
-                  />
-                )}
-
-                {filtersData.checkboxes.length > 0 &&
-                  filtersData.checkboxes.map((item: any) => (
-                    <CustomFilterComponent
-                      key={item.title}
-                      title={item.title}
-                      type="checkboxes"
-                      items={item.value}
-                      selectedItems={checkboxes[item.title]}
-                      onItemChange={(value: string) =>
-                        handleCheckboxChange(item.title, value)
-                      }
-                    />
-                  ))}
-              </motion.div>
-
-              <div className="flex justify-between items-center py-[22px] gap-[20px]">
-                {isOpen ? (
-                  <div className="flex flex-row gap-[10px]">
-                    <Button
-                      text="Скидання"
-                      className="w-[30%] text-[12px] md:text-[14px] font-medium"
-                      type="submit"
-                      background="white"
-                      bordered
-                      onClick={handleResetFilters}
-                    />
-                    <Button
-                      text="Підтверження"
-                      className=" md:px-[50px] w-[60%] md:w-[70%] text-[12px] md:text-[14px] font-default "
-                      type="submit"
-                      onClick={handleSubmitFilters}
-                    />
-                  </div>
-                ) : (
-                  <h2 className="font-frontrunner text-[28px] leading-[25px]">
-                    Фільтри
-                  </h2>
-                )}
-
-                <button
-                  className="w-[55px] h-[52px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
-                  onClick={handleOpenFilterClick}
-                >
-                  <Image
-                    src={ArrowUp}
-                    alt="arrow up"
-                    className={`object-fit transition-transform ${
-                      isOpen ? "" : "rotate-180"
-                    }`}
-                  />
-                </button>
+                ))}
+              <div className="flex flex-row gap-[10px]">
+                <Button
+                  text="Скидання"
+                  className="w-[30%] text-[16px] font-medium"
+                  type="submit"
+                  background="white"
+                  bordered
+                  onClick={handleResetFilters}
+                />
+                <Button
+                  text="Підтверження"
+                  className="w-[70%] text-[16px] font-medium "
+                  type="submit"
+                />
               </div>
             </form>
+          </aside>
+
+          <div className="z-20 top-0 xl:hidden bg-pearl">
+            <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
+              <form onSubmit={handleSubmitFormForMobile}>
+                <motion.div
+                  className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
+                    isOpen ? "pt-5" : ""
+                  }`}
+                  initial={{
+                    opacity: 0,
+                    height: 0,
+                    visibility: "hidden",
+                    translateY: "-500px",
+                  }}
+                  animate={{
+                    opacity: isOpen ? 1 : 0,
+                    height: isOpen ? "fit-content" : 0,
+                    visibility: isOpen ? "visible" : "hidden",
+                    translateY: isOpen ? "0" : "-500px",
+                  }}
+                  transition={{ duration: 0.5 }}>
+                  {filtersData.search.title && (
+                    <CustomFilterComponent
+                      title={filtersData.search.title}
+                      type="search"
+                      searchQuery={searchText}
+                      onSearchChange={newHandleSearchText}
+                      clearSearchQuery={() => setSearchText("")}
+                      onApplyClick={handleSubmitFilters}
+                    />
+                  )}
+
+                  {filtersData.buttons.title && (
+                    <CustomFilterComponent
+                      title={filtersData.buttons.title}
+                      type="buttons"
+                      items={filtersData.buttons.value}
+                      activeButton={productType}
+                      onChangeButton={changeProductType}
+                    />
+                  )}
+
+                  {filtersData.priceRange.title && (
+                    <CustomFilterComponent
+                      title={filtersData.priceRange.title}
+                      type="price"
+                      limit={filtersData.priceRange.value}
+                      rangeValue={priceRangeFromObject}
+                      step={1}
+                      onRangeChange={handlePriceChange}
+                      onApplyClick={handleSubmitFilters}
+                    />
+                  )}
+
+                  {filtersData.checkboxes.length > 0 &&
+                    filtersData.checkboxes.map((item: any) => (
+                      <CustomFilterComponent
+                        key={item.title}
+                        title={item.title}
+                        type="checkboxes"
+                        items={item.value}
+                        selectedItems={checkboxes[item.title]}
+                        onItemChange={(value: string) =>
+                          handleCheckboxChange(item.title, value)
+                        }
+                      />
+                    ))}
+                </motion.div>
+
+                <div className="flex justify-between items-center py-[22px] gap-[20px]">
+                  {isOpen ? (
+                    <div className="flex flex-row gap-[10px]">
+                      <Button
+                        text="Скидання"
+                        className="w-[30%] text-[12px] md:text-[14px] font-medium"
+                        type="submit"
+                        background="white"
+                        bordered
+                        onClick={handleResetFilters}
+                      />
+                      <Button
+                        text="Підтверження"
+                        className=" md:px-[50px] w-[60%] md:w-[70%] text-[12px] md:text-[14px] font-default "
+                        type="submit"
+                        onClick={handleSubmitFilters}
+                      />
+                    </div>
+                  ) : (
+                    <h2 className="font-frontrunner text-[28px] leading-[25px]">
+                      Фільтри
+                    </h2>
+                  )}
+
+                  <button
+                    className="w-[55px] h-[52px] rounded-md border border-darkBurgundy flex items-center justify-center hover:bg-white duration-300"
+                    onClick={handleOpenFilterClick}>
+                    <Image
+                      src={ArrowUp}
+                      alt="arrow up"
+                      className={`object-fit transition-transform ${
+                        isOpen ? "" : "rotate-180"
+                      }`}
+                    />
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

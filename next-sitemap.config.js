@@ -1,1 +1,4 @@
-module.exports = { siteUrl: "https://timestone.com", generateRobotsTxt: true };
+module.exports = {
+  siteUrl: "https://wellness.markets",
+  generateRobotsTxt: true,
+};

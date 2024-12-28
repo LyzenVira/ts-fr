@@ -1,7 +1,11 @@
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
+import { InfoMessage } from "@/config/types";
 
-export const sendResetPasswordEmail = async (email: string): Promise<any> => {
+export const sendResetPasswordEmail = async (
+  email: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/forgot-password`, {
       email,
@@ -10,10 +14,15 @@ export const sendResetPasswordEmail = async (email: string): Promise<any> => {
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      if (error.status === 409 || error.status === 400) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 409 || error.status === 400) {
         return error.response?.data;
-      } else {
-        return "server error";
       }
     }
   }
@@ -21,7 +30,8 @@ export const sendResetPasswordEmail = async (email: string): Promise<any> => {
 
 export const resetForgetPassword = async (
   token: string,
-  password: string
+  password: string,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const response = await axios.post(`${BASE_URL}/auth/reset-password`, {
@@ -32,16 +42,24 @@ export const resetForgetPassword = async (
   } catch (error) {
     console.error(error);
     if (axios.isAxiosError(error)) {
-      if (error.status === 409 || error.status === 400) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 409 || error.status === 400) {
         return error.response?.data;
-      } else {
-        return "server error";
       }
     }
   }
 };
 
-export const checkResetToken = async (token: string): Promise<any> => {
+export const checkResetToken = async (
+  token: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
   try {
     const res = await axios.get(`${BASE_URL}/auth/reset-password/check-token`, {
       headers: {
@@ -50,9 +68,18 @@ export const checkResetToken = async (token: string): Promise<any> => {
     });
     return true;
   } catch (error) {
-	console.error(error);
+    console.error(error);
     if (axios.isAxiosError(error)) {
-    return error;
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else {
+        return error;
+      }
     }
   }
 };

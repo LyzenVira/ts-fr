@@ -2,16 +2,20 @@ import { Metadata } from "next";
 import ForgotMeFormSection from "@/app/sections/authorization-page/ForgotMeFormSection";
 
 export const metadata: Metadata = {
-  title: "TIMESTONE - Відновлення пароля",
+  title: "Montre d`Art  - Відновлення пароля",
   description: "Сторінка відновлення пароля",
-  icons: { icon: "@/app/favicon.ico" },
-  viewport: { initialScale: 1.0, width: "device-width" },
+  icons: { icon: "@/app/favicon.ico" }
 };
+
+export const generateViewport = () => ({
+	initialScale: 1.0,
+	width: "device-width",
+ });
 
 const Page = () => {
   return (
     <>
-    <ForgotMeFormSection/>
+      <ForgotMeFormSection />
     </>
   );
 };

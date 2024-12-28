@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
+import { InfoMessage } from "@/config/types";
 
 export const getProducts = async (
   filters?: object,
@@ -8,9 +9,10 @@ export const getProducts = async (
   pageCursor?: string,
   sortKey?: string,
   reverse?: boolean,
-  pagination?: boolean
+  pagination?: boolean,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
-  let attempts = 0; 
+  let attempts = 0;
 
   while (attempts < 3) {
     try {
@@ -33,33 +35,64 @@ export const getProducts = async (
         return response.data;
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          (error.status === 500 || error.code === "ERR_NETWORK") &&
+          attempts === 2
+        ) {
+          if (setInfoMessage) {
+            setInfoMessage({
+              type: "error",
+              text: "Ой! Сталася помилка на сервері!",
+            });
+          }
+        }
+      }
       console.error(`Attempt ${attempts + 1}: Failed to fetch products`, error);
     }
     attempts++;
-    await delay(1000); 
+    await delay(1000);
   }
-const result = {products: [],count: 0, pageInfo: ""}
+  const result = { products: [], count: 0, pageInfo: "" };
   return result;
 };
 
-
-export const getProductByHandle = async (handle: string): Promise<any> => {
-  try {
-    let attempts = 0;
-    while (attempts < 3) {
+export const getProductByHandle = async (
+  handle: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
+  let attempts = 0;
+  while (attempts < 3) {
+    try {
       const response = await axios.get(`${BASE_URL}/product/${handle}`);
       if (response.status === 200) {
         return response.data;
       }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          (error.status === 500 || error.code === "ERR_NETWORK") &&
+          attempts === 2
+        ) {
+          if (setInfoMessage) {
+            setInfoMessage({
+              type: "error",
+              text: "Ой! Сталася помилка на сервері!",
+            });
+          }
+        }
+      }
+      console.error("Failed to fetch product by handle:", error);
     }
     await delay(1000);
     attempts++;
-  } catch (error) {
-    console.error("Failed to fetch product by handle:", error);
   }
 };
 
-export const getFilters = async (): Promise<any> => {
+
+export const getFilters = async (
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
   let attempts = 0;
 
   while (attempts < 3) {
@@ -69,13 +102,26 @@ export const getFilters = async (): Promise<any> => {
         return response.data;
       }
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (
+          (error.status === 500 || error.code === "ERR_NETWORK") &&
+          attempts === 2
+        ) {
+          if (setInfoMessage) {
+            setInfoMessage({
+              type: "error",
+              text: "Ой! Сталася помилка на сервері!",
+            });
+          }
+        }
+      }
       console.error(`Attempt ${attempts + 1} failed:`, error);
     }
 
     attempts++;
     await delay(1000);
   }
-  
+
   const filter = {
     search: {
       title: "Search",
@@ -99,7 +145,7 @@ export const getFilters = async (): Promise<any> => {
       },
     ],
   };
-  
+
   return filter;
 };
 

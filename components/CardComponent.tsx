@@ -34,8 +34,6 @@ const CardComponent: FC<CardProps> = ({
       image: image,
       quantity: 1,
       maxQuantity: quantity,
-      caseColor: "red",
-      strapColor: "red",
     }, 1);
   };
 
@@ -70,7 +68,7 @@ const CardComponent: FC<CardProps> = ({
         className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
         {title}
       </Link>
-      <span className="font-normal text-xl text-onyx">${price}</span>
+      <span className="font-normal text-xl text-onyx">₴{price}</span>
     </div>
   );
 };

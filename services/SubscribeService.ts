@@ -1,9 +1,11 @@
 import axios from "axios";
 import { BASE_URL } from "@/config/config";
+import { InfoMessage } from "@/config/types";
 
 export const addNewReceiver = async (
   name: string,
-  email: string
+  email: string,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const response = await axios.post(`${BASE_URL}/newsletter/receiver`, {
@@ -14,7 +16,16 @@ export const addNewReceiver = async (
     return response.status;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      return error.status;
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else {
+        return error.status;
+      }
     }
   }
 };
@@ -22,7 +33,8 @@ export const addNewReceiver = async (
 export const sendEmailToUs = async (
   fullName: string,
   email: string,
-  text: string
+  text: string,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const response = await axios.post(`${BASE_URL}/newsletter/contact-us`, {
@@ -33,14 +45,24 @@ export const sendEmailToUs = async (
 
     return response.status;
   } catch (error) {
-    console.error("Error sending email to us:", error);
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      }
+    }
   }
 };
 
 export const sendEmailNewsletter = async (
   subject: string,
   text: string,
-  html: string
+  html: string,
+  setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const response = await axios.post(`${BASE_URL}/newsletter/send`, {
@@ -50,19 +72,38 @@ export const sendEmailNewsletter = async (
     });
     return response.status;
   } catch (error) {
-    console.error("Error sending email newsletter:", error);
-    // throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      }
+    }
   }
 };
 
-export const removeReceiver = async (email: string): Promise<any> => {
+export const removeReceiver = async (
+  email: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
   try {
     const response = await axios.delete(`${BASE_URL}/newsletter/unsubscribe`, {
       params: { email },
     });
     return response.status;
   } catch (error) {
-    console.error("Error removing receiver:", error);
-    // throw error;
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      }
+    }
   }
 };

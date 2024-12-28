@@ -7,20 +7,19 @@ import { useDisclosure } from "@mantine/hooks";
 import React, { FC, useState, useEffect } from "react";
 import { Modal, Button, ActionIcon } from "@mantine/core";
 
+import { useAlert } from "@/hooks/alertContext";
 import MainButton from "@/components/ButtonComponent";
 import { updateRefreshToken } from "@/services/AuthService";
 
 import Logo from "@/images/logo.svg";
-
-// import Logo from "@/images/vectors/logo.svg";
 import Close from "@/images/vectors/close.svg";
 import Burger from "@/images/vectors/burger.svg";
 import Basket from "@/images/vectors/basket.svg";
 
 const navData = [
-  { link: "/#about-us", text: "About Us" },
-  { link: "/contact-us", text: "Contact us" },
-  { link: "/legal", text: "FAQ" },
+  { link: "/#about-us", text: "Про нас" },
+  { link: "/contact-us", text: "Контакти" },
+  { link: "/legal", text: "Допомога" },
 ];
 
 const Header = () => {
@@ -28,7 +27,8 @@ const Header = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const { products, changeOpenState } = useCart();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const { setInfoMessage } = useAlert();
+  
   useEffect(() => {
     const fetchTokens = async () => {
       try {
@@ -39,7 +39,7 @@ const Header = () => {
           if (accessToken) {
             setIsLoggedIn(true);
           } else {
-            const tokens = await updateRefreshToken();
+            const tokens = await updateRefreshToken(setInfoMessage);
             localStorage.setItem("accessToken", tokens.accessToken);
             localStorage.setItem("refreshToken", tokens.refreshToken);
             setIsLoggedIn(true);
@@ -77,7 +77,7 @@ const Header = () => {
             ))}
           </nav>
 
-          <MainButton text="Watches" tag="a" href="/catalog" />
+          <MainButton text="Годинники" tag="a" href="/catalog" />
         </div>
 
         <div className="flex gap-[25px]">
@@ -98,7 +98,7 @@ const Header = () => {
           </button>
           {!isLoggedIn ? (
             <MainButton
-              text="Log in"
+              text="Увійти"
               tag="a"
               href="/auth"
               background="transparent"

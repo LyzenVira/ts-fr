@@ -18,8 +18,6 @@ export type CartProductProps = {
   image: string;
   quantity: number;
   maxQuantity: number;
-  caseColor: string;
-  strapColor: string;
 };
 
 export type Product = {
@@ -85,4 +83,9 @@ export type Postomat = {
 export type Department = {
   Description: string;
   Ref: string;
+};
+
+export type InfoMessage = {
+  type: "success" | "error";
+  text: string;
 };

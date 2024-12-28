@@ -17,7 +17,6 @@ interface HeroProps {
 const SocialObject = [
   { href: "https://www.pinterest.com/", title: "Pinterest", image: Pinterest },// tik tok
   { href: "https://www.instagram.com/", title: "Instagram", image: Instagram },
-  // { href: "https://twitter.com/", title: "Twitter", image: Twitter }, 
   { href: "https://www.facebook.com/", title: "Facebook", image: Facebook },
 ];
 

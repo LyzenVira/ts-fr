@@ -1,21 +1,23 @@
 "use client";
-import React, { FC, useEffect, useState } from "react";
-import Button from "@/components/ButtonComponent";
-import TitleComponents from "@/components/TitleComponents";
 import Image from "next/image";
-import { Carousel } from "@mantine/carousel";
+import { Metadata } from "next";
+import "@mantine/carousel/styles.css";
 import { Loader } from "@mantine/core";
-import { getProductByHandle } from "@/services/ProductService";
+import { Carousel } from "@mantine/carousel";
+import React, { FC, useEffect, useState } from "react";
+
 import { Product } from "@/config/types";
 import { useCart } from "@/hooks/useCart";
-import "@mantine/carousel/styles.css";
-import { Metadata } from "next";
+import { useAlert } from "@/hooks/alertContext";
+import Button from "@/components/ButtonComponent";
+import TitleComponents from "@/components/TitleComponents";
+import { getProductByHandle } from "@/services/ProductService";
 
 import LeftArrow from "@/images/product-page/arrow-left.svg";
 import RightArrow from "@/images/product-page/arrow-right.svg";
 
 export const metadata: Metadata = {
-  title: "Timestone - продукт",
+  title: "Montre d`Art - продукт",
   description: "Пропонуємо найбільший вибір годиннників",
   keywords: [
     "Годинники",
@@ -25,11 +27,10 @@ export const metadata: Metadata = {
     "онлайн шопінг",
   ],
   icons: { icon: "@/app/favicon.ico" },
-  viewport: { initialScale: 1.0, width: "device-width" },
   openGraph: {
-    title: "Timestone - продукт",
+    title: "Montre d`Art - продукт",
     description: "Ознайомтесь з широким асортиментом годинників",
-    url: "https://timestone.com/catalog",
+    url: "https://wellness.markets/catalog",
     images: [
       {
         url: "",
@@ -42,6 +43,11 @@ export const metadata: Metadata = {
   },
 };
 
+export const generateViewport = () => ({
+  initialScale: 1.0,
+  width: "device-width",
+});
+
 interface productProps {
   productName: string;
 }
@@ -52,6 +58,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [product, setProduct] = useState<Product>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setInfoMessage } = useAlert();
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
@@ -85,7 +92,10 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const productData: Product = await getProductByHandle(productName);
+        const productData: Product = await getProductByHandle(
+          productName,
+          setInfoMessage
+        );
         if (productData) {
           setProduct(productData);
           setQuantity(productData.quantity && productData.quantity > 0 ? 1 : 0);
@@ -140,8 +150,6 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           image: product.images[0],
           quantity: quantity,
           maxQuantity: maxQuantity,
-          caseColor: "red",
-          strapColor: "red",
         },
         quantity
       );
@@ -160,7 +168,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
       priceCurrency: "UAH",
       price: product?.price,
       availability: product?.quantity,
-      url: `https://timestone.com/product/${product?.handle}`,
+      url: `https://wellness.markets/product/${product?.handle}`,
     },
   };
 
@@ -172,14 +180,14 @@ const ProductSection: FC<productProps> = ({ productName }) => {
       />
       <TitleComponents
         text="product"
-        additionalText="Product / Product Number One"
+        additionalText="Продукт номер один по якості"
       />
 
       <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
         <Button
           bordered
           className="flex !items-start text-[12px] py-[8px] px-[9px]"
-          text="Back to catalog"
+          text="Повернутись до каталогу"
           href="/catalog"
           icon="back"
           background="transparent"
@@ -223,7 +231,8 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 width={80}
                 className="my-[30px] mr-[50px] md:mr-[20px]"
               />
-            }>
+            }
+          >
             {slides}
           </Carousel>
         </div>
@@ -232,7 +241,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           <h2 className="text-[32px]">{product?.title}</h2>
           <p className="text-[14px] my-[20px] w-[350px] md:w-[400px] text-silver">
             {higherDescription ||
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisl tincidunt eget nullam non."}
+              "Цей годинник — ідеальне поєднання елегантності та функціональності. Високоякісні матеріали, стильний дизайн і точний механізм створюють неперевершене враження. Ідеальний аксесуар для будь-якого випадку"}
           </p>
 
           <hr className="block w-[350px] md:w-[400px]" />
@@ -267,7 +276,8 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity > 1 || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}>
+                }`}
+              >
                 -
               </button>
               <span className="w-10 h-10 rounded-sm flex items-center justify-center">
@@ -279,16 +289,17 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity < maxQuantity || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}>
+                }`}
+              >
                 +
               </button>
               {isOutOfStock && (
-                <p className="text-darkBurgundy">Product is out of stock!</p>
+                <p className="text-darkBurgundy">Товару немає в наявності!</p>
               )}
             </div>
 
             <span className="text-[20px] px-[10px] py-[10px]">
-              {product?.price}$
+              {product?.price}₴
             </span>
           </div>
 
@@ -303,3 +314,105 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   );
 };
 export default ProductSection;
+
+{
+  /* 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "TimeStone",
+            "item": "https://www.google.com.ua/?hl=uk"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Годинники",
+            "item": "https://www.google.com.ua/?hl=uk"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Molumenzeit S 2",
+            "item": "https://www.google.com.ua/?hl=uk"
+          }
+        ]
+      }
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.8",
+          "reviewCount": "11"
+        },
+        "name": "Molumenzeit S 2",
+        "image": "https://cdn.shopify.com/s/files/1/0897/4191/8494/files/bluewatch.jpg?v=1729085317",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud",
+        "brand": "ferferf",
+        "offers": {
+          "priceCurrency": "UAH",
+          "price": "10000.00",
+          "priceValidUntil": "2025-05-05",
+          "availability": "https://schema.org/InStock",
+          "url": "https://timestone.com/product/Molumenzeit S 2",
+          "shippingDetails": {
+            "@type": "OfferShippingDetails",
+            "shippingRate": {
+              "@type": "MonetaryAmount",
+              "value": "70.00",
+              "currency": "UAH"
+            },
+            "shippingDestination": {
+              "@type": "DefinedRegion",
+              "name": "Ukraine",
+              "addressCountry": "UA"
+            },
+            "applicableCountry": {
+              "@type": "Country",
+              "name": "Ukraine",
+              "addressCountry": "UA"
+            },
+            "deliveryTime": {
+              "@type": "ShippingDeliveryTime",
+              "handlingTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 1,
+                "maxValue": 2,
+                "unitText": "BusinessDay",
+                "unitCode": "DAY"
+              },
+              "transitTime": {
+                "@type": "QuantitativeValue",
+                "minValue": 3,
+                "maxValue": 5,
+                "unitText": "BusinessDay",
+                "unitCode": "DAY"
+              }
+            }
+          },
+          "hasMerchantReturnPolicy": {
+            "@type": "MerchantReturnPolicy",
+            "name": "30-Day Return Policy",
+            "url": "https://example.com/return-policy",
+            "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+            "applicableCountry": {
+              "@type": "Country",
+              "name": "UA"
+            },
+            "returnMethod": "https://schema.org/ReturnByMail",
+            "returnFees": "https://schema.org/FreeReturn",
+            "itemCondition": "https://schema.org/NewCondition",
+            "merchantReturnDays": 30
+          }
+        }
+      }
+    </script>
+  */
+}

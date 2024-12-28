@@ -1,26 +1,29 @@
 "use client";
-import { useForm } from "@mantine/form";
-import React, { useState } from "react";
-import Background from "@/images/authorization-page/bg-geomitrical.svg";
 import Image from "next/image";
-import Button from "@/components/ButtonComponent";
+import React, { useState } from "react";
+import { useForm, isEmail } from "@mantine/form";
+
+import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
+import Button from "@/components/ButtonComponent";
 import LoaderComponent from "@/components/LoaderComponent";
-import { isEmail } from "@mantine/form";
 import { sendResetPasswordEmail } from "@/services/ForgotMeService";
 import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
+
+import Background from "@/images/authorization-page/bg-geomitrical.svg";
 
 const ForgotMeFormSection = () => {
 
   const [forgotMeMessage, setForgotMeMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const { setInfoMessage } = useAlert();
   const forgotMeForm = useForm({
     initialValues: {
       email: ""
     },
     validate: {
-      email: isEmail("Invalid email"),
+      email: isEmail("Неправильний емайл"),
     },
   });
 
@@ -29,15 +32,13 @@ const ForgotMeFormSection = () => {
     if (!errors.hasErrors) {
       setIsLoading(true);
       const { email } = forgotMeForm.values;
-      const response = await sendResetPasswordEmail(email);
+      const response = await sendResetPasswordEmail(email,setInfoMessage);
       setIsLoading(false);
       if (response === 200) {
         setIsModalVisible(true);
         forgotMeForm.reset();
       } else if (response == "No user found with this email address") {
-        setForgotMeMessage("User with this email does not exist. Try again.");
-      } else {
-        setForgotMeMessage("Error with server.");
+        setForgotMeMessage("Користувач з такою електронною поштою не існує. Спробуйте знову");
       }
     }
   };
@@ -46,8 +47,8 @@ const ForgotMeFormSection = () => {
     <>
      {isModalVisible && (
         <ModalWindowComponent
-          title="Email sended"
-          message="Please, check your email to and use the link to reset your password"
+          title="Лист надісланий"
+          message="Будь ласка, перевірте вашу поштову скриньку та перейдіть по посиланню в надісланому вам листі, щоб відновити пароль"
         />
       )}
       <section className="relative flex justify-center items-center font-poppins">
@@ -66,10 +67,10 @@ const ForgotMeFormSection = () => {
 
           <div className="text-center mb-[26px] mt-[40px]">
             <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
-              FORGOT PASSWORD
+              ЗАБУЛИ ПАРОЛЬ
             </h2>
             <p className="leading-[2] text-silver">
-              Enter your email address and we will send you a link to reset your password.
+              Введіть вашу електронну адресу, після цього ми надішлимо вам листа з посилання, щоб відновити пароль
             </p>
           </div>
 
@@ -97,7 +98,7 @@ const ForgotMeFormSection = () => {
             </div>
 
             <Button
-              text="Send Email"
+              text="Відрправити"
               type="button"
               className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
               onClick={handleResetEmail}

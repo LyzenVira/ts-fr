@@ -1,25 +1,29 @@
 "use client";
-
 import Image from "next/image";
 import "@mantine/carousel/styles.css";
 import { Carousel } from "@mantine/carousel";
 import { useMediaQuery } from "@mantine/hooks";
 import React, { useEffect, useState } from "react";
+
+import { CardProps } from "@/config/types";
+import { useAlert } from "@/hooks/alertContext";
 import Button from "@/components/ButtonComponent";
 import CardComponent from "@/components/CardComponent";
-import { CardProps } from "@/config/types";
-import ImgArrow from "@/images/vectors/arrow.svg";
 import { getProducts } from "@/services/ProductService";
 import ProductSceleton from "../category-page/ProductSceleton";
 
-const textSliderObject = {
-  textParagraphPart1:
-    "We have inVolumenzeit gives you a total of 48 style combinations with 4 dial types, 4 dial colors, 3 case colors, multiple stylish strap combinations, and customized engraving options.",
-};
+import ImgArrow from "@/images/vectors/arrow.svg";
 
 const SliderSection = () => {
   const [sliderProducts, setSliderProducts] = useState<CardProps[]>([]);
   const [loading, setLoading] = useState(false);
+  const { setInfoMessage } = useAlert();
+
+  useEffect(() => {
+      setTimeout(() => {
+        setLoading(true);
+      }, 1500);
+  }, [sliderProducts]);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -31,7 +35,8 @@ const SliderSection = () => {
           "",
           "BEST_SELLING",
           true,
-          true
+          true,
+          setInfoMessage,
         );
         if (response.products) {
           setSliderProducts(response.products);
@@ -44,6 +49,7 @@ const SliderSection = () => {
 
     fetchProducts();
   }, []);
+
   const isMobile = useMediaQuery("(max-width: 767.98px)");
   const isTablet = useMediaQuery(
     "(min-width: 768px) and (max-width: 1023.98px)"
@@ -77,6 +83,7 @@ const SliderSection = () => {
     default:
       slidesToShow = 0;
   }
+  
   return (
     <>
       <section className="py-[40px] lg:pb-[0px] lg:pt-[150px] xl:pt-[200px]">
@@ -86,7 +93,7 @@ const SliderSection = () => {
           </h1>
 
           <div className="font-poppins text-silver text-default text-center leading-[28px] lg:text-left lg:max-w-[600px]">
-            <p>{textSliderObject.textParagraphPart1}</p>
+            <p>Вибір годинників від найкращих брендів для вашого стилю та статусу. Елегантність, точність та стиль — у кожному з цих шедеврів</p>
           </div>
         </div>
         <div className="mb-[112px] mt-[50px] overflow-hidden">
@@ -116,7 +123,7 @@ const SliderSection = () => {
                 </div>
               }
             >
-              {loading ? (
+              {loading && sliderProducts.length !=0  ? (
                 <>
                   {sliderProducts.map((card) => (
                     <Carousel.Slide
@@ -139,7 +146,7 @@ const SliderSection = () => {
             </Carousel>
           </div>
           <Button
-            text="Your watches"
+            text="Годинники"
             tag="a"
             href="/catalog"
             className="mt-[80px] max-w-[200px] mx-auto sm:mr-[20px] sm:ml-auto sm:mt-[90px] lg:mr-[60px]"

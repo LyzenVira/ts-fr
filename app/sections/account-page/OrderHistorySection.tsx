@@ -131,16 +131,16 @@ const OrderHistorySection = () => {
                           <thead>
                             <tr>
                               <th className="text-[10px] md:text-[12px] lg:text-[14px]">
-                                Item
+                                Товар
                               </th>
                               <th className="text-[10px] md:text-[12px] lg:text-[14px] text-center">
-                                Price
+                                Ціна
                               </th>
                               <th className="text-[10px] md:text-[12px] lg:text-[14px] text-center">
-                                Quantity
+                                Кількість
                               </th>
                               <th className="text-[10px] md:text-[12px] lg:text-[14px] text-center">
-                                Subtotal
+                                Підсумок
                               </th>
                             </tr>
                           </thead>
@@ -181,7 +181,7 @@ const OrderHistorySection = () => {
                         </Table>
                         <div className="border-t mt-4 pt-4 flex justify-end text-sm text-gray-700">
                           <span className="font-bold text-[12px] md:text-[14px] lg:text-[16px]">
-                            Total: {order.total}
+                            Сума: {order.total}
                           </span>
                         </div>
                       </div>

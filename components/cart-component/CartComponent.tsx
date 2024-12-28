@@ -18,7 +18,7 @@ const CartComponent = () => {
       }`}>
       <div className="bg-pearl flex items-center text-[20px] p-5">
         <h3 className="text-black font-frontrunner flex-1 text-center">
-          Your Cart
+          Корзина
         </h3>
         <button
           className="ml-auto"
@@ -44,10 +44,10 @@ const CartComponent = () => {
 
       <div className="py-6 px-5 bg-pearl flex flex-col gap-[16px] mt-auto">
         <ul className="flex flex-col text-silver gap-2">
-          <li className="border-b border-[##ECEDF1] flex items-center justify-between">
-            <p className="text-[12px]">Grand Total</p>
+          <li className="border-b border-[#ECEDF1] flex items-center justify-between">
+            <p className="text-[12px]">Загальна сума</p>
             <span className="text-[20px] text-black font-normal">
-              ${totalAmount}
+				₴{totalAmount}
             </span>
           </li>
         </ul>
@@ -67,7 +67,7 @@ const CartComponent = () => {
               }
             }, 300);
           }}>
-          {products.length > 0 ? " Go To Checkout" : " Go To Catalog"}
+          {products.length > 0 ? " Оформити замовлення" : "Перейти в каталог"}
         </Link>
       </div>
     </div>

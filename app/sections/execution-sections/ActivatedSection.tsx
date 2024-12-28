@@ -1,19 +1,22 @@
 "use client";
 import { Loader } from "@mantine/core";
-import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+
+import { useAlert } from "@/hooks/alertContext";
 import { activateAccount } from "@/services/AuthService";
 
 const ActivatedSection = ({ activatedToken }: { activatedToken: string }) => {
   const router = useRouter();
-
+  const { setInfoMessage } = useAlert();
+  
   useEffect(() => {
     const activate = async () => {
       try {
-        await activateAccount(activatedToken);
+        await activateAccount(activatedToken,setInfoMessage);
         router.push("/account");
       } catch (error) {
-        console.error("Failed to activate", error);
+        console.error("Помилка активації", error);
       }
     };
 

@@ -4,14 +4,15 @@ import React, { useState, useEffect } from "react";
 import { removeReceiver } from "@/services/SubscribeService";
 
 import Button from "@/components/ButtonComponent";
+import { useAlert } from "@/hooks/alertContext";
 
 const UnsubscribeSection = ({ email }: { email: string }) => {
   const [loading, setLoading] = useState(true);
-
+  const { setInfoMessage } = useAlert();
   useEffect(() => {
     const remove = async () => {
       try {
-        await removeReceiver(email);
+        await removeReceiver(email,setInfoMessage);
         setLoading(false);
       } catch (error) {
         console.error("Failed to remove", error);
@@ -33,7 +34,7 @@ const UnsubscribeSection = ({ email }: { email: string }) => {
         <Button
           href="/"
           tag="a"
-          text="Return to Homepage"
+          text="Повернутись на Головну сторінку"
           className=" mb-[10px] focus:outline-none focus:ring-0 cursor-pointer"
         />
       )}

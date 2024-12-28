@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
 import ReactDOM from "react-dom";
+import React, {useEffect} from "react";
 import { useDisclosure } from "@mantine/hooks";
-import React, {useEffect, useState} from "react";
 import { MantineProvider, Modal } from "@mantine/core";
 
 import Button from "../ButtonComponent";
@@ -52,7 +52,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
           <Button
             href="/"
             tag="a"
-            text="Return to Homepage"
+            text="Повернутись на Головну сторінку"
             className="mt-[20px] md:mt-[40px] mb-[10px] focus:outline-none focus:ring-0"
           />
           <Image src={Thanks} alt="thanks" className="object-cover rounded-[32px]" />

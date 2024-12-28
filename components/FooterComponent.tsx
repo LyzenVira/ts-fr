@@ -20,7 +20,7 @@ const Footer = () => {
       </Link>
 
       <p className="bg-pearl w-[100%] py-[20px] text-center text-silver min-h-[60px] px-[20px] leading-[25px]">
-        © Copyright {currentYear} TIMESTONE - All rights reserved.
+        © Авторські права {currentYear} Montre d'Art - Усі права захищені.
       </p>
     </footer>
   );

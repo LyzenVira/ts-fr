@@ -6,6 +6,7 @@ import { FiCheckCircle } from "react-icons/fi";
 import React, { useState, useEffect } from "react";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
+import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import LoaderComponent from "@/components/LoaderComponent";
@@ -23,6 +24,7 @@ const NewsSection = () => {
     type: string;
     text: string;
   } | null>(null);
+  const { setInfoMessage } = useAlert();
 
   const form = useForm({
     initialValues: {
@@ -30,8 +32,8 @@ const NewsSection = () => {
       email: "",
     },
     validate: {
-      name: hasLength({ min: 3 }, "Name must be at least 3 characters"),
-      email: isEmail("Invalid email"),
+      name: hasLength({ min: 3 }, "Ім'я повинно містити не менше 3 символів"),
+      email: isEmail("Невірний email"),
     },
   });
 
@@ -45,7 +47,7 @@ const NewsSection = () => {
       const currentTime = new Date().getTime();
       const timeElapsed = currentTime - lastAttemptTime;
 
-      if (timeElapsed >  96 * 60 * 60 * 1000) {
+      if (timeElapsed > 96 * 60 * 60 * 1000) {
         setAttempts(0);
         localStorage.setItem("inputAttempts", "0");
       } else {
@@ -70,7 +72,7 @@ const NewsSection = () => {
 
     const values = form.values;
 
-    const response = await addNewReceiver(values.name, values.email);
+    const response = await addNewReceiver(values.name, values.email,setInfoMessage);
 
     if (attempts < MAX_ATTEMPTS) {
       const newAttempts = attempts + 1;
@@ -89,19 +91,12 @@ const NewsSection = () => {
       setIsLoading(false);
       setMessage({
         type: "success",
-        text: "You have successfully subscribed to our newsletter!",
+        text: "Ви  успішно підписалися на нашу розсилку!",
       });
       setValue("");
     } else if (response === 400) {
       setIsLoading(false);
       setValue("Цей email вже існує!");
-    } else {
-      setIsLoading(false);
-      setMessage({
-        type: "error",
-        text: "Oops! A server error occurred!",
-      });
-      setValue("");
     }
 
     setIsLoading(false);
@@ -121,7 +116,10 @@ const NewsSection = () => {
             message.type === "success" ? "text-[green]" : "text-[red]"
           }`}
         >
-          {message.text}
+          <div className="flex items-center space-x-2">
+            {message.type === "success" ? <FiCheckCircle /> : <TfiAlert />}
+            <span>{message.text}</span>
+          </div>
         </Alert>
       )}
       {isLoading && <LoaderComponent />}
@@ -133,8 +131,8 @@ const NewsSection = () => {
           </h3>
 
           <p className="text-[10px] xl:text-default">
-            We will inform you about coming Giveaways, Offers, Online Store
-            preparation progress and start of sales
+            Ми будемо інформувати вас про майбутні розіграші, пропозиції, хід
+            підготовки онлайн-магазину та початок продажів.
           </p>
 
           <form
@@ -151,7 +149,7 @@ const NewsSection = () => {
                 <Input
                   inputType="input"
                   required
-                  placeholder="Name"
+                  placeholder="І'мя"
                   type="text"
                   errorType="warning"
                   {...form.getInputProps("name")}
@@ -172,7 +170,7 @@ const NewsSection = () => {
             </div>
             {value && <p className={`text-[14px] text-snow `}>{value}</p>}
             <Button
-              text="Sing Up"
+              text="Підписатись"
               type="submit"
               tag="button"
               background="onyx"
@@ -182,10 +180,10 @@ const NewsSection = () => {
           </form>
 
           <p>
-            You agree to our
+            Ви погоджуєтесь з нашими
             <span> </span>
             <a href="/legal" className="font-medium underline">
-              Terms and Conditions
+              Умовами та положеннями
             </a>
           </p>
         </div>

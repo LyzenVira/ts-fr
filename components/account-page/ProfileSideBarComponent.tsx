@@ -12,7 +12,6 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState("section1");
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategory(category);
@@ -23,7 +22,6 @@ const ProfileSideBarComponent: FC<SidebarProps> = ({
     localStorage.setItem("accessToken", "");
     localStorage.setItem("refreshToken", "");
     router.push("/");
-    setIsLoggedIn(false);
   };
 
   const activeClass = `

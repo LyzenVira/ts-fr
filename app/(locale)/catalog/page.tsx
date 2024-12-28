@@ -2,7 +2,7 @@ import CategoryMain from "@/app/sections/category-page/CategoryMain";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Timestone - каталог",
+  title: "Montre d`Art - каталог",
   description: "Пропонуємо найбільший вибір годиннників",
   keywords: [
     "Годинники",
@@ -14,9 +14,9 @@ export const metadata: Metadata = {
     "онлайн шопінг",
   ],
   openGraph: {
-    title: "Timestone - каталог",
+    title: "Montre d`Art - каталог",
     description: "Ознайомтесь з широким асортиментом годинників",
-    url: "https://timestone.com/catalog",
+    url: "https://wellness.markets/catalog",
     images: [
       {
         url: "",
@@ -26,6 +26,11 @@ export const metadata: Metadata = {
     ],
   },
 };
+
+export const generateViewport = () => ({
+	initialScale: 1.0,
+	width: "device-width",
+ });
 
 export default function CategoryPage() {
   return (

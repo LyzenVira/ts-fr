@@ -9,6 +9,7 @@ import { CardProps } from "@/config/types";
 
 import { PaginationProvider } from "@/hooks/useCustomPagination";
 import { getFilters } from "@/services/ProductService";
+import { useAlert } from "@/hooks/alertContext";
 
 export const ProductsContext = createContext<CardProps[]>([]);
 const LIMIT = 12; //24
@@ -21,12 +22,15 @@ const CategoryMain = () => {
   const [isFilter, setIsFilter] = useState<boolean>(false);
   const [sort, setSort] = useState<string>("RELEVANCE");
   const [reverse, setReverse] = useState<boolean>(true);
+ const { setInfoMessage } = useAlert();
 
   useEffect(() => {
     const fetchFilters = async () => {
-      const data = await getFilters();
-      setFilters(data);
-      setIsFilter(true);
+      const data = await getFilters(setInfoMessage);
+      if (data.priceRange.value[1] != 10) {
+        setFilters(data);
+        setIsFilter(true);
+      }
     };
 
     fetchFilters();
@@ -45,8 +49,8 @@ const CategoryMain = () => {
       <PaginationProvider>
         <ProductsContext.Provider value={products}>
           <TitleComponents
-            text="Products"
-            additionalText={`${totalProducts} Total Products`}
+            text="Продукти"
+            additionalText={`${totalProducts} Кількість продуктів`}
           />
           <div className="xl:flex xl:px-[75px]">
             <CategoryAsideFilters

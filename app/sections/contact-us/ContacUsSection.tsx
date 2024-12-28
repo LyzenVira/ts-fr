@@ -6,6 +6,7 @@ import { FiCheckCircle } from "react-icons/fi";
 import React, { useState, useEffect } from "react";
 import { hasLength, isEmail, useForm } from "@mantine/form";
 
+import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import LoaderComponent from "@/components/LoaderComponent";
@@ -24,6 +25,7 @@ const ContactUsSection = () => {
     type: string;
     text: string;
   } | null>(null);
+  const { setInfoMessage } = useAlert();
 
   const form = useForm({
     initialValues: {
@@ -78,20 +80,15 @@ const ContactUsSection = () => {
     const response = await sendEmailToUs(
       values.fullName,
       values.email,
-      values.message
+      values.message,
+      setInfoMessage
     );
 
     if (response === 200) {
       setIsLoading(false);
       setMessage({
         type: "success",
-        text: "Message sent successfully!",
-      });
-    } else {
-      setIsLoading(false);
-      setMessage({
-        type: "error",
-        text: "Oops! A server error occurred!",
+        text: "Повідолмення успішно відправлено!",
       });
     }
 
@@ -99,7 +96,7 @@ const ContactUsSection = () => {
       const newAttempts = attempts + 1;
       setAttempts(newAttempts);
       localStorage.setItem("contactUsAttempts", newAttempts.toString());
-      localStorage.setItem("contactUsTime", new Date().getTime().toString()); 
+      localStorage.setItem("contactUsTime", new Date().getTime().toString());
 
       if (newAttempts >= MAX_ATTEMPTS) {
         setIsDisabled(true);
@@ -124,7 +121,10 @@ const ContactUsSection = () => {
             message.type === "success" ? "text-[green]" : "text-[red]"
           }`}
         >
-          {message.text}
+          <div className="flex items-center space-x-2">
+            {message.type === "success" ? <FiCheckCircle /> : <TfiAlert />}
+            <span>{message.text}</span>
+          </div>
         </Alert>
       )}
       {isLoading && <LoaderComponent />}
@@ -136,8 +136,8 @@ const ContactUsSection = () => {
                 Зв'яжіться з нами
               </h1>
               <p className="text-center text-[#424551] font-poppins text-default text-silver lg:text-start">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Enim
-                facilisi elementum commodo ipsum. Aenean aenean adipiscing lect
+                Якщо у вас є запитання, пропозиції або вам потрібна допомога,
+                будь ласка, зв'яжіться з нами. Ми завжди раді допомогти вам!
               </p>
             </div>
             <form

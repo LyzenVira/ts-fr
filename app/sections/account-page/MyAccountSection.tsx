@@ -1,14 +1,13 @@
 "use client";
-import Image from "next/image";
 import { Alert } from "flowbite-react";
-import { Select } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { TfiAlert } from "react-icons/tfi";
 import { FiCheckCircle } from "react-icons/fi";
 import { useDisclosure } from "@mantine/hooks";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 
 import { City } from "@/config/types";
+import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
 import { getCities } from "@/services/ShippingService";
@@ -16,32 +15,7 @@ import LoaderComponent from "@/components/LoaderComponent";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
 
-//! кнопки для підєднання facebook or google
 const MyAccountSection = () => {
-  // const cities = [
-  //   { value: "kyiv", label: "Київ" },
-  //   { value: "lviv", label: "Львів" },
-  //   { value: "kharkiv", label: "Харків" },
-  //   { value: "odesa", label: "Одеса" },
-  //   { value: "dnipro", label: "Дніпро" },
-  //   { value: "zaporizhzhia", label: "Запоріжжя" },
-  //   { value: "vinnytsia", label: "Вінниця" },
-  //   { value: "chernihiv", label: "Чернігів" },
-  //   { value: "sumy", label: "Суми" },
-  //   { value: "poltava", label: "Полтава" },
-  //   { value: "chernivtsi", label: "Чернівці" },
-  //   { value: "ivano-frankivsk", label: "Івано-Франківськ" },
-  //   { value: "uzhhorod", label: "Ужгород" },
-  //   { value: "ternopil", label: "Тернопіль" },
-  //   { value: "khmelnytskyi", label: "Хмельницький" },
-  //   { value: "mykolaiv", label: "Миколаїв" },
-  //   { value: "rivne", label: "Рівне" },
-  //   { value: "zhytomyr", label: "Житомир" },
-  //   { value: "cherkasy", label: "Черкаси" },
-  //   { value: "kropyvnytskyi", label: "Кропивницький" },
-  //   { value: "lutsk", label: "Луцьк" },
-  // ];
-
   const months = [
     { value: "january", label: "Січень" },
     { value: "february", label: "Лютий" },
@@ -82,6 +56,27 @@ const MyAccountSection = () => {
       value: String(i + 1),
     }));
   };
+
+  const validOperators = [
+    "067",
+    "068",
+    "096",
+    "097",
+    "098",
+    "099",
+    "063",
+    "073",
+    "093",
+    "050",
+    "066",
+    "095",
+    "091",
+    "092",
+    "094",
+    "089",
+    "093",
+  ];
+
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false);
   const [subscribe, setSubscribe] = useState(false);
@@ -91,10 +86,11 @@ const MyAccountSection = () => {
   const dayOptions = getDaysInMonth(month);
   const [isStart, setIsStart] = useState(false);
   const [cities, setCities] = useState<City[]>([]);
-  const [infoMessage, setInfoMessage] = useState<{
+  const [infoMessage, setMessage] = useState<{
     type: string;
     text: string;
   } | null>(null);
+  const { setInfoMessage } = useAlert();
 
   const form = useForm({
     initialValues: {
@@ -110,12 +106,23 @@ const MyAccountSection = () => {
     },
     validate: {
       name: (value) =>
-        value.length < 3 ? "Name must be at least 3 characters" : null,
+        value.length < 3 ? "Ім'я повинно містити не менше 3 символів" : null,
       fullname: (value) =>
-        value.length < 3 ? "Name must be at least 3 characters" : null,
-      email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
-      phone: (value) =>
-        /^\+38\d{10}$/.test(value) ? null : "Invalid phone number",
+        value.length < 3
+          ? "Повне ім'я повинно містити не менше 3 символів"
+          : null,
+      email: (value) =>
+        /^\S+@\S+$/.test(value) ? null : "Невірна електронна адреса",
+      phone: (value) => {
+        const operatorCode = form.values.phone.slice(3, 6);
+        if (
+          !/^\+38\d{10}$/.test(value) ||
+          !validOperators.includes(operatorCode)
+        ) {
+          return "Некоректний номер телефону";
+        }
+        return null;
+      },
     },
   });
 
@@ -127,24 +134,24 @@ const MyAccountSection = () => {
     },
     validate: {
       password: (value) => {
-        if (/\s/.test(value)) return "Password must not contain spaces";
+        if (/\s/.test(value)) return "Пароль не може містити пробілів";
         if (/[\u0400-\u04FF]/.test(value))
-          return "Cyrillic characters are not allowed";
-        if (value.length < 6) return "Minimum 6 characters required";
-        if (value.length > 20) return "Maximum 20 characters allowed";
+          return "Не дозволяються кириличні символи";
+        if (value.length < 6) return "Мінімум 6 символів";
+        if (value.length > 20) return "Максимум 20 символів";
         if (!/[a-z]/.test(value)) {
-          return "Password must contain at least one lowercase letter";
+          return "Пароль повинен містити хоча б одну маленьку літеру";
         }
         if (!/[A-Z]/.test(value)) {
-          return "Password must contain at least one uppercase letter";
+          return "Пароль повинен містити хоча б одну велику літеру";
         }
         if (!/\d/.test(value)) {
-          return "Password must contain at least one digit";
+          return "Пароль повинен містити хоча б одну цифру";
         }
         return null;
       },
       verify: (value, values) =>
-        value !== values.password ? "Passwords did not match" : null,
+        value !== values.password ? "Паролі не співпадають" : null,
     },
   });
 
@@ -192,12 +199,12 @@ const MyAccountSection = () => {
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
-    setLoading(true);
     const errors = form.validate();
     const values1 = form.values;
     if (Object.keys(errors.errors).length > 0) {
       return;
     }
+    setLoading(true);
     const response = await updateUser({
       lastname: values1.fullname,
       firstname: values1.name,
@@ -211,57 +218,43 @@ const MyAccountSection = () => {
     if (response === 201) {
       if (subscribe !== values1.subscribe) {
         if (values1.subscribe) {
-          response1 = await addNewReceiver(values1.name, values1.email);
+          response1 = await addNewReceiver(
+            values1.name,
+            values1.email,
+            setInfoMessage
+          );
           if (response1 === 201) {
             setSubscribe(true);
             form.setFieldValue("subscribe", true);
             setLoading(false);
-            setInfoMessage({
+            setMessage({
               type: "success",
-              text: "Your details updated successfully!",
-            });
-          } else {
-            setLoading(false);
-            setInfoMessage({
-              type: "error",
-              text: "Oops! A server error occurred!",
+              text: "Ваші дані успішно оновлені!",
             });
           }
         } else {
-          response1 = await removeReceiver(values1.email);
+          response1 = await removeReceiver(values1.email, setInfoMessage);
           if (response1 === 204) {
             setSubscribe(false);
             form.setFieldValue("subscribe", false);
             setLoading(false);
-            setInfoMessage({
+            setMessage({
               type: "success",
-              text: "Your details updated successfully!",
-            });
-          } else {
-            setLoading(false);
-            setInfoMessage({
-              type: "error",
-              text: "Oops! A server error occurred!",
+              text: "Ваші дані успішно оновлені!",
             });
           }
         }
       } else {
         setLoading(false);
-        setInfoMessage({
+        setMessage({
           type: "success",
-          text: "Your details updated successfully!",
+          text: "Ваші дані успішно оновлені!",
         });
       }
-    } else {
-      setLoading(false);
-      setInfoMessage({
-        type: "error",
-        text: "Oops! A server error occurred!",
-      });
     }
 
     setTimeout(() => {
-      setInfoMessage(null);
+      setMessage(null);
     }, 5000);
   };
 
@@ -278,21 +271,15 @@ const MyAccountSection = () => {
     }
     if (response.status === 201) {
       setLoading(false);
-      setInfoMessage({
+      setMessage({
         type: "success",
-        text: "Your password updated successfully!",
-      });
-    } else {
-      setLoading(false);
-      setInfoMessage({
-        type: "error",
-        text: "Oops! A server error occurred!",
+        text: "Ваш пароль успішно оновлений!",
       });
     }
     setLoading(false);
 
     setTimeout(() => {
-      setInfoMessage(null);
+      setMessage(null);
     }, 5000);
     formWithPass.reset();
   };
@@ -300,7 +287,6 @@ const MyAccountSection = () => {
   const handleSelect = async (value: string) => {
     if (!value.trim()) {
       setCities([]);
-      // setError(null);
       return;
     }
 
@@ -309,7 +295,7 @@ const MyAccountSection = () => {
       form.setFieldValue("address1", selectedCity.Present);
       setCities([]);
     } else {
-      const city = (await getCities(value)) || [];
+      const city = (await getCities(value, setInfoMessage)) || [];
 
       setCities(city);
     }
@@ -325,7 +311,10 @@ const MyAccountSection = () => {
             infoMessage.type === "success" ? "text-[green]" : "text-[red]"
           }`}
         >
-          {infoMessage.text}
+          <div className="flex items-center space-x-2">
+            {/* {infoMessage.type === "success" ? <FiCheckCircle /> : <TfiAlert />} */}
+            <span>{infoMessage.text}</span>
+          </div>
         </Alert>
       )}
       {loading && <LoaderComponent />}
@@ -337,7 +326,7 @@ const MyAccountSection = () => {
           </h1>
           <p className="text-[12px] text-silver md:text-[14px] text-center">
             Ласкаво просимо до вашої панелі управління — універсального центру
-            для всіх ваших останніх дій у обліковому записі.
+            для всіх ваших останніх дій у обліковому записі
           </p>
         </div>
         <form
@@ -411,7 +400,7 @@ const MyAccountSection = () => {
               />
 
               <Input
-                placeholder="Дата"
+                placeholder="День"
                 inputType="select"
                 bordered={true}
                 value={day}
@@ -433,7 +422,7 @@ const MyAccountSection = () => {
               {isStart && (
                 <>
                   <Input
-                    className="w-full lg:w-[45%]"
+                    className="mini:w-[100%] lg:w-[45%]"
                     inputType="select"
                     error={true}
                     bordered

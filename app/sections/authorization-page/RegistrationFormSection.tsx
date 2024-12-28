@@ -1,27 +1,29 @@
 "use client";
+import { useDisclosure } from "@mantine/hooks";
 import React, { useState, useEffect } from "react";
-import Button from "@/components/ButtonComponent";
+import { useForm, isEmail, hasLength } from "@mantine/form";
+
+import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
-import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
+import Button from "@/components/ButtonComponent";
 import LoaderComponent from "@/components/LoaderComponent";
 import { registrateNewUser } from "@/services/AuthService";
 import { addNewReceiver } from "@/services/SubscribeService";
-import { useForm } from "@mantine/form";
-import { isEmail, hasLength } from "@mantine/form";
-import { useDisclosure } from "@mantine/hooks";
+import ModalWindowComponent from "@/components/checkout-page/OrderingComponent";
+
 const months = [
-  { value: "january", label: "January" },
-  { value: "february", label: "February" },
-  { value: "march", label: "March" },
-  { value: "april", label: "April" },
-  { value: "may", label: "May" },
-  { value: "june", label: "June" },
-  { value: "july", label: "July" },
-  { value: "august", label: "August" },
-  { value: "september", label: "September" },
-  { value: "october", label: "October" },
-  { value: "november", label: "November" },
-  { value: "december", label: "December" },
+  { value: "january", label: "Січень" },
+  { value: "february", label: "Лютий" },
+  { value: "march", label: "Березень" },
+  { value: "april", label: "Квітень" },
+  { value: "may", label: "Травень" },
+  { value: "june", label: "Червень" },
+  { value: "july", label: "Липень" },
+  { value: "august", label: "Серпень" },
+  { value: "september", label: "Вересень" },
+  { value: "october", label: "Жовтень" },
+  { value: "november", label: "Листопад" },
+  { value: "december", label: "Грудень" },
 ];
 
 const getDaysInMonth = (month: string): { value: string; label: string }[] => {
@@ -48,6 +50,26 @@ const getDaysInMonth = (month: string): { value: string; label: string }[] => {
   }));
 };
 
+const validOperators = [
+  "067",
+  "068",
+  "096",
+  "097",
+  "098",
+  "099",
+  "063",
+  "073",
+  "093",
+  "050",
+  "066",
+  "095",
+  "091",
+  "092",
+  "094",
+  "089",
+  "093",
+];
+
 const RegistrationFormSection = () => {
   const MAX_ATTEMPTS = 5;
   const [attempts, setAttempts] = useState(0);
@@ -61,6 +83,7 @@ const RegistrationFormSection = () => {
   const [day, setDay] = useState("");
   const dayOptions = getDaysInMonth(month);
   const [visible, { toggle }] = useDisclosure(false);
+  const { setInfoMessage } = useAlert();
 
   const registrationForm = useForm({
     initialValues: {
@@ -77,81 +100,37 @@ const RegistrationFormSection = () => {
       registrationMessage: "",
     },
     validate: {
-      firstName: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      lastName: hasLength({ min: 2 }, "Must be at least 2 characters"),
-      email: isEmail("Invalid email"),
+      firstName: hasLength({ min: 2 }, "Має бути не менше 2 символів"),
+      lastName: hasLength({ min: 2 }, "Має бути не менше 2 символів"),
+      email: isEmail("Невірна електронна адреса"),
       confirmEmail: (value, values) =>
-        value !== values.email ? "Emails must match" : null,
+        value !== values.email ? "Електронні адреси повинні співпадати" : null,
       password: (value) => {
-        if (/\s/.test(value)) return "Password must not contain spaces";
+        if (/\s/.test(value)) return "Пароль не може містити пробілів";
         if (/[\u0400-\u04FF]/.test(value))
-          return "Cyrillic characters are not allowed";
-        if (value.length < 6) return "Minimum 6 characters required";
-        if (value.length > 20) return "Maximum 20 characters allowed";
+          return "Не дозволяються кириличні символи";
+        if (value.length < 6) return "Мінімум 6 символів";
+        if (value.length > 20) return "Максимум 20 символів";
         if (!/[a-z]/.test(value))
-          return "Password must contain lowercase letter";
-        if (!/[A-Z]/.test(value))
-          return "Password must contain uppercase letter";
-        if (!/[0-9]/.test(value)) return "Password must contain digit";
+          return "Пароль повинен містити маленьку літеру";
+        if (!/[A-Z]/.test(value)) return "Пароль повинен містити велику літеру";
+        if (!/[0-9]/.test(value)) return "Пароль повинен містити цифру";
         return null;
       },
       confirmPassword: (value, values) =>
-        value !== values.password ? "Passwords must match" : null,
-      phone: (value) =>
-        /^\+38\d{10}$/.test(value) ? null : "Invalid phone number",
+        value !== values.password ? "Паролі повинні співпадати" : null,
+      phone: (value) => {
+        const operatorCode = registrationForm.values.phone.slice(3, 6);
+        if (
+          !/^\+38\d{10}$/.test(value) ||
+          !validOperators.includes(operatorCode)
+        ) {
+          return "Некоректний номер телефону";
+        }
+        return null;
+      },
     },
   });
-
-  const handleCreateAccount = async () => {
-    const errors = registrationForm.validate();
-    if (!errors.hasErrors) {
-      if (attempts < MAX_ATTEMPTS) {
-        const newAttempts = attempts + 1;
-        setAttempts(newAttempts);
-        localStorage.setItem(
-          "inputRegistrationAttempts",
-          newAttempts.toString()
-        );
-        localStorage.setItem(
-          "inputRegistrationTime",
-          new Date().getTime().toString()
-        );
-        setIsLoading(true);
-        const address = "";
-        const { firstName, lastName, email, phone, password, receiveUpdates } =
-          registrationForm.values;
-        const name = `${firstName} ${lastName}`;
-        if (receiveUpdates === true) {
-          await addNewReceiver(name, email);
-        }
-        const dateOfBirth = `${registrationForm.values.month}, ${registrationForm.values.date}`;
-        const response = await registrateNewUser(
-          firstName,
-          lastName,
-          email,
-          phone,
-          dateOfBirth,
-          password,
-          address
-        );
-        setIsLoading(false);
-        if (response === "created") {
-          setIsModalVisible(true);
-          registrationForm.reset();
-        } else if (response == "A user with this phone number already exists") {
-          setRegistrationMessage("This phone already exist. Try another.");
-        } else if (
-          response == "A user with this email address already exists"
-        ) {
-          setRegistrationMessage("This email already exist. Try another.");
-        } else if (response == "User not activated") {
-          setRegistrationMessage("Your acc not activated. Check email box.");
-        } else {
-          setRegistrationMessage("Problems wih server");
-        }
-      }
-    }
-  };
 
   useEffect(() => {
     const savedAttempts = localStorage.getItem("inputRegistrationAttempts");
@@ -193,27 +172,83 @@ const RegistrationFormSection = () => {
     }
   }, [registrationForm.values.phone]);
 
+  const handleCreateAccount = async () => {
+    const errors = registrationForm.validate();
+    if (!errors.hasErrors) {
+      if (attempts < MAX_ATTEMPTS) {
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        localStorage.setItem(
+          "inputRegistrationAttempts",
+          newAttempts.toString()
+        );
+        localStorage.setItem(
+          "inputRegistrationTime",
+          new Date().getTime().toString()
+        );
+        setIsLoading(true);
+        const address = "";
+        const { firstName, lastName, email, phone, password, receiveUpdates } =
+          registrationForm.values;
+        const name = `${firstName} ${lastName}`;
+        if (receiveUpdates === true) {
+          await addNewReceiver(name, email, setInfoMessage);
+        }
+        const dateOfBirth = `${registrationForm.values.month}, ${registrationForm.values.date}`;
+        const response = await registrateNewUser(
+          firstName,
+          lastName,
+          email,
+          phone,
+          dateOfBirth,
+          password,
+          address,
+          setInfoMessage
+        );
+        setIsLoading(false);
+        if (response === "created") {
+          setIsModalVisible(true);
+          registrationForm.reset();
+        } else if (response == "A user with this phone number already exists") {
+          setRegistrationMessage(
+            "Цей номер телефону вже існує. Спробуйте інший."
+          );
+        } else if (
+          response == "A user with this email address already exists"
+        ) {
+          setRegistrationMessage(
+            "Ця електронна адреса вже існує. Спробуйте іншу."
+          );
+        } else if (response == "User not activated") {
+          setRegistrationMessage(
+            "Ваш акаунт не активовано. Перевірте свою електронну пошту."
+          );
+        }
+      }
+    }
+  };
+
   return (
     <>
       {isLoading && <LoaderComponent />}
       {isModalVisible && (
         <ModalWindowComponent
-          title="Almost finished"
-          message="Please, check your email to confirm registration."
+          title="Майже готова"
+          message="Будь ласка, перевірте вашу електронну скриньку для підтвердження реєстрації"
         />
       )}
 
       <div className="text-center mb-[48px]">
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
-          NEW TO TIMESTONE ?
+          Вперше на Montre d`Art ?
         </h2>
-        <p className="text-silver">Create a new account</p>
+        <p className="text-silver">Створити аккаунт</p>
       </div>
 
       <div className="flex flex-col gap-[10px]">
         <Input
           inputType="input"
-          placeholder="First Name"
+          placeholder="Ім'я"
           type="text"
           bordered={true}
           fullWidth={true}
@@ -224,7 +259,7 @@ const RegistrationFormSection = () => {
 
         <Input
           inputType="input"
-          placeholder="Last Name"
+          placeholder="Прізвище"
           type="text"
           bordered={true}
           fullWidth={true}
@@ -233,7 +268,7 @@ const RegistrationFormSection = () => {
           required={true}
         />
 
-        <p className="text-start text-silver mt-[6px]">Date of birth</p>
+        <p className="text-start text-silver mt-[6px]">Дата народження</p>
         <div className="flex flex-col lg:flex-row gap-[10px] text-left">
           <Input
             placeholder="Місяць"
@@ -250,7 +285,7 @@ const RegistrationFormSection = () => {
           />
 
           <Input
-            placeholder="Дата"
+            placeholder="День"
             inputType="select"
             className="!w-full"
             bordered={true}
@@ -265,7 +300,7 @@ const RegistrationFormSection = () => {
         </div>
         <Input
           inputType="input"
-          placeholder="Phone Number"
+          placeholder="Номер телефону"
           type="text"
           bordered={true}
           fullWidth={true}
@@ -277,7 +312,7 @@ const RegistrationFormSection = () => {
         <div className="flex flex-col lg:flex-row gap-[10px]">
           <Input
             inputType="input"
-            placeholder="Email"
+            placeholder="Електронна пошта"
             type="email"
             fullWidth={true}
             className="lg:min-w-[314px]"
@@ -289,7 +324,7 @@ const RegistrationFormSection = () => {
 
           <Input
             inputType="input"
-            placeholder="Confirm Email"
+            placeholder="Підтвердіть електронну пошту"
             type="email"
             fullWidth={true}
             className="lg:min-w-[314px]"
@@ -303,7 +338,7 @@ const RegistrationFormSection = () => {
         <div className="flex flex-col lg:flex-row gap-[10px]">
           <Input
             inputType="password"
-            placeholder="Password"
+            placeholder="Пароль"
             type="password"
             visible={visible}
             onVisibilityChange={toggle}
@@ -317,7 +352,7 @@ const RegistrationFormSection = () => {
 
           <Input
             inputType="password"
-            placeholder="Confirm Password"
+            placeholder="Підтвердіть пароль"
             type="password"
             visible={visible}
             onVisibilityChange={toggle}
@@ -341,7 +376,7 @@ const RegistrationFormSection = () => {
             className="w-[20px] h-[20px] appearance-none border-2 border-gray-400 rounded-sm cursor-pointer checked:bg-darkBurgundy checked:border-darkBurgundy checked:after:content-['✔'] checked:after:flex checked:after:justify-center checked:after:items-center checked:after:w-full checked:after:h-full checked:after:text-white focus:outline-none focus:ring-0"
           />
           <label htmlFor="sign-up-update" className="cursor-pointer">
-            Sign-up to receive the latest updates and promotions
+            Отримувати найсвіжіші оновлення та акції
           </label>
         </div>
 
@@ -365,7 +400,7 @@ const RegistrationFormSection = () => {
           </div>
 
           <Button
-            text="Create Account"
+            text="Створити аккаунт"
             type="button"
             className="!w-[208px] mx-auto mt-[8px] mb-[24px] lg:mb-[56px]"
             onClick={() => {

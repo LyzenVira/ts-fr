@@ -23,7 +23,7 @@ const ServerErrorSection = ({
   return (
     <section className="container flex flex-col items-center bg-white rounded-[32px] pt-[40px] gap-[50px] md:gap-[20px] ">
       <h1 className="font-frontrunner text-center text-black text-[28px] md:text-[32px] lg:text-[42px] px-[10px]">
-        Server Error, Please Try Again Later
+        Помилка сервера. Будь ласка спробуйте знову пізніше
       </h1>
       <Image
         src={ServerError}
@@ -33,7 +33,7 @@ const ServerErrorSection = ({
       <Button
         tag="button"
         type="reset"
-        text="Try again"
+        text="Спробувати знову"
         className=" mb-[10px] focus:outline-none focus:ring-0"
         onClick={reloadPage}
       />

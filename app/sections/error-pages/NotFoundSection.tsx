@@ -8,7 +8,7 @@ const NotFoundSection = () => {
   return (
     <section className="container flex flex-col items-center bg-white rounded-[32px] pt-[40px] gap-[50px] md:gap-[20px] ">
       <h1 className="font-frontrunner text-center text-black text-[28px] md:text-[32px] lg:text-[42px] px-[10px]">
-      Oops, Something Went Wrong
+      Ой, такої сторінки не існує!
       </h1>
       <Image
         src={NotFound}

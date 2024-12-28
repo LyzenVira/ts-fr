@@ -62,9 +62,9 @@ const Button: FC<ButtonProps> = ({
   const widthClass = fullWidth ? "w-[100%]" : "";
 
   const hoverClass = bordered
-    ? "hover:bg-darkBurgundy hover:text-white focus:bg-darkBurgundy focus:text-white transition-colors duration-300"
+    ? "hover:bg-darkBurgundy hover:text-white transition-colors duration-300"
     : finalBackground === "darkBurgundy"
-    ? "hover:bg-darkMaroon focus:bg-darkMaroon transition-colors duration-300"
+    ? "hover:bg-darkMaroon transition-colors duration-300"
     : "";
 
   const renderIcon = () => {
