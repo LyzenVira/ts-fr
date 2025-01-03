@@ -242,22 +242,22 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         <div className="flex flex-col items-center text-center font-poppins">
           <h2 className="text-[36px]">{product?.title}</h2>
 
-          <div className="flex mt-[15px]">
+          <div className="flex mt-[15px] items-center">
             {product && product?.discount > 0 ? (
               <>
-                <span className="text-[16px] ml-[8px] my-[20px] text-[grey] line-through">
+                <span className="text-[16px] ml-[8px] text-[grey] mt-[5px] line-through">
                 ₴{Number(
                     Number(product?.price) / (1 - product?.discount / 100)
                   ).toFixed(2)}
                   
                 </span>
 
-                <span className="text-[24px] ml-[8px] mr-[10px] py-[10px]">
+                <span className="text-[24px] ml-[8px] mr-[10px] font-semibold">
                 ₴{product?.price}
                 </span>
 
                 {product?.discount !== 0 && (
-                  <div className="bg-[red] text-white rounded-lg px-2 py-1 top-2 left-2 font-semibold h-fit my-[10px]">
+                  <div className="bg-[red] text-white rounded-lg px-2 top-2 left-2 font-semibold h-fit">
                     - {product?.discount}%
                   </div>
                 )}
