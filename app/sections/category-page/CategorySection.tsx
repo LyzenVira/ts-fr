@@ -9,6 +9,7 @@ import { ProductsContext } from "./CategoryMain";
 import CardComponent from "@/components/CardComponent";
 import CustomSelect from "@/components/SelectComponent";
 import { useCustomPagination } from "@/hooks/useCustomPagination";
+import { all } from "axios";
 
 const CategorySection = ({
   totalProducts,
@@ -140,12 +141,12 @@ const CategorySection = ({
         </motion.div>
       ) : (
         <>
-          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="mt-[32px] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-16">
             {allProducts.map((card: CardProps) => (
               <CardComponent {...card} key={card.id} />
             ))}
           </div>
-          <div className="flex justify-center gap-2 mt-10 items-center">
+          <div className="flex justify-center gap-2 mt-10 items-center text-[18px]">
             <button
               disabled={pagination.active === 1}
               onClick={() => handleChangePage(pagination.active - 1)}

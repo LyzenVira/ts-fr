@@ -321,10 +321,10 @@ const MyAccountSection = () => {
 
       <>
         <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
-          <h1 className="text-black text-[32px] md:text-[46px] font-medium">
+          <h1 className="text-black text-[36px] md:text-[52px] font-medium">
             Привіт, {userName}
           </h1>
-          <p className="text-[12px] text-silver md:text-[14px] text-center">
+          <p className="text-[14px] text-silver md:text-[16px] text-center">
             Ласкаво просимо до вашої панелі управління — універсального центру
             для всіх ваших останніх дій у обліковому записі
           </p>
@@ -422,7 +422,7 @@ const MyAccountSection = () => {
               {isStart && (
                 <>
                   <Input
-                    className="mini:w-[100%] lg:w-[45%]"
+                    className="mini:w-full lg:w-[45%]"
                     inputType="select"
                     error={true}
                     bordered
@@ -448,7 +448,7 @@ const MyAccountSection = () => {
               />
             </div>
           </div>
-          <div className="w-full flex text-[14px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
+          <div className="w-full flex text-[16px] items-center flex-col lg:flex-row text-silver justify-between gap-[14px] mt-[-20px] text-left">
             <div className="flex items-center">
               <input
                 {...form.getInputProps("subscribe")}
@@ -469,7 +469,7 @@ const MyAccountSection = () => {
           onSubmit={handleSubmitPassword}
         >
           <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px] ">
-            <h2 className="mb-[20px] text-[24px] text-silver">Новий пароль</h2>
+            <h2 className="mb-[20px] text-[28px] text-silver">Новий пароль</h2>
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
               <Input
                 inputType="password"

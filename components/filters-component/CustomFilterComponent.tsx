@@ -2,8 +2,6 @@
 import { motion } from "framer-motion";
 import React, { FC, useState } from "react";
 
-import Plus from "@/images/vectors/plus.svg";
-
 type FilterComponentProps = {
   type: "checkboxes" | "buttons" | "search" | "price";
   title: string;
@@ -51,14 +49,14 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
 
   return (
     <>
-      <div className="relative flex flex-col gap-[10px] border-b text-[14px] border-silver border-opacity-20 pb-5">
+      <div className="relative flex flex-col gap-[10px] border-b text-[16px] border-silver border-opacity-20 pb-5">
         <div
           className={`flex justify-between items-center ${
             type === "checkboxes" ? "cursor-pointer" : ""
           }`}
           onClick={toggleOpen}
         >
-          <h3 className="font-semibold text-[16px]">{title}</h3>
+          <h3 className="font-semibold text-[18px]">{title}</h3>
 
           {type === "checkboxes" && (
             <motion.div
@@ -66,7 +64,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
               animate={{ rotate: isOpen ? 45 : 0 }}
               transition={{ duration: 0.3 }}
             >
-              <span className="text-4xl text-darkBurgundy !select-none">+</span>
+              <span className="text-5xl text-darkBurgundy !select-none">+</span>
             </motion.div>
           )}
         </div>
@@ -76,7 +74,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
             <input
               className="rounded-sm bg-white py-[8px] border pl-3 pr-10 w-full border-[#D7DADD] focus:outline-none focus:border-[1px] focus:border-darkBurgundy"
               type="text"
-              placeholder="Напишіть сюда"
+              placeholder="Напишіть сюди"
               value={searchQuery}
               onChange={(e) => onSearchChange?.(e.target.value)}
             />
@@ -148,7 +146,7 @@ const CustomFilterComponent: FC<FilterComponentProps> = ({
                     activeButton === btn
                       ? "bg-darkBurgundy text-white"
                       : "bg-white text-darkBurgundy border-darkBurgundy border rounded-md"
-                  } py-[6px] px-[12px] text-sm font-medium rounded-md`}
+                  } py-[6px] px-[12px] font-medium rounded-md`}
                 >
                   {btn}
                 </button>

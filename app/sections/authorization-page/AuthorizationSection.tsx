@@ -33,7 +33,7 @@ const AuthorizationSection = () => {
                 className="w-full text-center relative mb-[24px] lg:mb-0"
               >
                 <h2
-                  className={`text-[20px] cursor-pointer font-bold pb-[8px] ${isActive ? "text-onyx" : "text-silver"}`}
+                  className={`text-[22px] cursor-pointer font-bold pb-[8px] ${isActive ? "text-onyx" : "text-silver"}`}
                   onClick={() => {
                     setIsLoginPage(index === 0);
                   }}

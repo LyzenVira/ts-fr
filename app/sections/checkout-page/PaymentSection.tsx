@@ -54,6 +54,7 @@ const PaymentSection: FC<{
         className="items-center"
       >
         <Checkbox
+        className="mini:whitespace-normal"
           label="LiqPay - оплата на картку"
           description="Visa, MasterCard, Apple Pay, Google Pay, PrivatPay"
           checked={paymentInfo === "LiqPay"}

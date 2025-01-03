@@ -116,7 +116,7 @@ const ProductsSection = ({
               <div className="flex my-[10px]">
                 <Image src={Shipping} alt={Shipping} />
                 <div className="flex flex-col justify-center ml-[20px]">
-                  <p className="text-[13px] text-silver md:text-[15px]">
+                  <p className="text-[14px] text-silver md:text-[16px]">
                     У вас немає товарів у кошику
                   </p>
                 </div>
@@ -134,8 +134,8 @@ const ProductsSection = ({
           onClick={handleSubmit}
           id="payment-button-container"
         >
-          <h2 className="text-[20px] md:text-[25px]">{totalAmount}₴</h2>
-          <p className="text-[16px] md:text-[15px]">Сума</p>
+          <h2 className="text-[24px]">{totalAmount}₴</h2>
+          <p>Сума</p>
         </div>
       </div>
     </>

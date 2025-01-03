@@ -117,7 +117,7 @@ const ContactUsSection = () => {
         <Alert
           color={message.type === "success" ? "green" : "red"}
           icon={message.type === "success" ? FiCheckCircle : TfiAlert}
-          className={`fixed bottom-0 right-0 m-4 p-4 z-10 text-[16px] lg:text-[18px] ${
+          className={`fixed bottom-0 right-0 m-4 p-4 z-10 lg:text-[18px] ${
             message.type === "success" ? "text-[green]" : "text-[red]"
           }`}
         >
@@ -135,7 +135,7 @@ const ContactUsSection = () => {
               <h1 className="font-frontrunner text-center text-black text-[28px] mb-[15px] md:text-[32px] md:mb-[20px] lg:text-start lg:text-[42px] lg:mb-[25px]">
                 Зв'яжіться з нами
               </h1>
-              <p className="text-center text-[#424551] font-poppins text-default text-silver lg:text-start">
+              <p className="text-center text-[#424551] font-poppins text-silver lg:text-start">
                 Якщо у вас є запитання, пропозиції або вам потрібна допомога,
                 будь ласка, зв'яжіться з нами. Ми завжди раді допомогти вам!
               </p>
@@ -147,14 +147,17 @@ const ContactUsSection = () => {
               {isDisabled ? (
                 <p className="text-red-500">Ви вичерпали всі спроби!</p>
               ) : (
-                <p className="text-black">
-                  Залишилось спроб: {MAX_ATTEMPTS - attempts}
-                </p>
+                attempts > 0 &&
+                attempts < MAX_ATTEMPTS && (
+                  <p className="text-black">
+                    Залишилось спроб: {MAX_ATTEMPTS - attempts}
+                  </p>
+                )
               )}
               <div className="w-full flex flex-col gap-[14px]">
                 <Input
                   inputType="input"
-                  placeholder="І'мя"
+                  placeholder="Ім'я"
                   required={true}
                   bordered={true}
                   className=" lg:w-[90%] xl:w-[70%] "
@@ -215,7 +218,7 @@ const ContactUsSection = () => {
             <Image
               src={ContactUsImage}
               alt="contact us"
-              className="object-cover w-[100%] lg:w-[500px] xl:w-[500px]"
+              className="object-cover w-[100%] lg:w-[500px] xl:w-[500px] rounded-lg"
               height={540}
               width={640}
               loading="lazy"

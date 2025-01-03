@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 
 import { CardProps } from "@/config/types";
 import { useCart } from "@/hooks/useCart";
@@ -13,6 +13,7 @@ const CardComponent: FC<CardProps> = ({
   handle,
   title,
   price,
+  discount,
   image,
   quantity,
 }) => {
@@ -26,20 +27,28 @@ const CardComponent: FC<CardProps> = ({
 
     !isOpen && changeOpenState(true);
 
-    addToCart({
-      id: id,
-      handle: handle,
-      title: title,
-      price: +price,
-      image: image,
-      quantity: 1,
-      maxQuantity: quantity,
-    }, 1);
+    addToCart(
+      {
+        id: id,
+        handle: handle,
+        title: title,
+        price: +price,
+        image: image,
+        quantity: 1,
+        maxQuantity: quantity,
+      },
+      1
+    );
   };
 
   return (
-    <div className="flex flex-col items-center font-poppins">
+    <div className="relative flex flex-col items-center font-poppins">
       <div className="relative rounded-md overflow-hidden">
+        {discount !== 0 && (
+          <div className="absolute z-20 bg-[red] text-white rounded-md px-2 py-1 top-2 left-2 font-semibold">
+            - {discount}%
+          </div>
+        )}
         <Link href={`/catalog/${handle}`}>
           <Image
             src={image}
@@ -65,10 +74,22 @@ const CardComponent: FC<CardProps> = ({
 
       <Link
         href={`/catalog/${handle}`}
-        className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300">
+        className="mt-5 mb-4 text-silver hover:scale-110 hover:font-bold duration-300"
+      >
         {title}
       </Link>
-      <span className="font-normal text-xl text-onyx">₴{price}</span>
+      {discount !== 0 ? (
+        <p className="flex gap-3">
+          <span className="font-light text-xl text-silver line-through">
+            ₴{Number(Number(price) / (1 - discount / 100)).toFixed(2)}
+          </span>
+          <span className="text-xl text-darkBurgundy font-medium">
+            ₴{price}
+          </span>
+        </p>
+      ) : (
+        <span className="font-normal text-xl text-onyx">₴{price}</span>
+      )}
     </div>
   );
 };

@@ -69,7 +69,7 @@ const ForgotMeFormSection = () => {
             <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
               ЗАБУЛИ ПАРОЛЬ
             </h2>
-            <p className="leading-[2] text-silver">
+            <p className="leading-[2] text-silver text-[14px] md:text-[16px]">
               Введіть вашу електронну адресу, після цього ми надішлимо вам листа з посилання, щоб відновити пароль
             </p>
           </div>
@@ -98,7 +98,7 @@ const ForgotMeFormSection = () => {
             </div>
 
             <Button
-              text="Відрправити"
+              text="Відправити"
               type="button"
               className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
               onClick={handleResetEmail}

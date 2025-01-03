@@ -16,7 +16,7 @@ const CartComponent = () => {
       className={`bg-white text-white top-0 right-0 h-screen w-full md:w-[366px] shadow-lg z-[200] flex flex-col ${
         isOpen ? "fixed" : "hidden"
       }`}>
-      <div className="bg-pearl flex items-center text-[20px] p-5">
+      <div className="bg-pearl flex items-center text-[24px] p-5">
         <h3 className="text-black font-frontrunner flex-1 text-center">
           Корзина
         </h3>
@@ -45,8 +45,8 @@ const CartComponent = () => {
       <div className="py-6 px-5 bg-pearl flex flex-col gap-[16px] mt-auto">
         <ul className="flex flex-col text-silver gap-2">
           <li className="border-b border-[#ECEDF1] flex items-center justify-between">
-            <p className="text-[12px]">Загальна сума</p>
-            <span className="text-[20px] text-black font-normal">
+            <p className="text-[16px]">Загальна сума</p>
+            <span className="text-[22px] text-black font-normal">
 				₴{totalAmount}
             </span>
           </li>

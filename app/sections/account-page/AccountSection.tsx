@@ -35,7 +35,7 @@ const AccountSection = () => {
   if (isToken !== true) {
     return (
       <section className="container pt-[40px] flex flex-col justufy-center items-center gap-[20px] min-h-screen">
-        <h1 className="text-black text-[24px] md:text-[32px] font-medium">
+        <h1 className="text-black text-[28px] md:text-[36px] font-medium">
           Ви не авторизовані. Увійдіть, щоб продовжити.
         </h1>
         <Button

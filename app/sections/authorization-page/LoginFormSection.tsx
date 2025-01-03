@@ -75,6 +75,9 @@ const LoginFormSection = () => {
       } else if (response == "User not activated") {
         setLoginMessage("Ваш аккаунт не активований. Перевірьте вашу електронну скриньку");
       }
+      else{
+        setLoginMessage("Користувача з такою електронною адресою не існує.");
+      }
     }
   };
 
@@ -86,7 +89,7 @@ const LoginFormSection = () => {
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
 		  Ласкаво просимо! Увійдіть до свого акаунта
         </h2>
-        <p className="leading-[2] text-silver">
+        <p className="leading-[2] text-silver text-[14px] md:text-[16px]">
 		  Увійдіть у свій існуючий акаунт, щоб перевіряти поточні замовлення та більше
         </p>
       </div>

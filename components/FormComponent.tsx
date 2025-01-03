@@ -24,7 +24,7 @@ const FormComponent: FC<formProps> = ({
       className={`${className} rounded-[5px] border-[1px] border-whisper w-full justify-center mx-auto lg:mx-0 bg-pearl md:w-[500px] mini:w-[420px] lg:w-full`}
     >
       <p className="mx-[30px] my-[25px] flex justify-between" onClick={toggleOpen}>
-        <span className="font-semibold">{title}</span>
+        <span className="font-semibold lg:text-[18px]">{title}</span>
         <Image
           src={Arrow}
           alt="Arrow"

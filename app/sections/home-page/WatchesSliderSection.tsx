@@ -92,7 +92,7 @@ const SliderSection = () => {
             Годинники
           </h1>
 
-          <div className="font-poppins text-silver text-default text-center leading-[28px] lg:text-left lg:max-w-[600px]">
+          <div className="font-poppins text-silver text-center leading-[28px] lg:text-left lg:max-w-[600px]">
             <p>Вибір годинників від найкращих брендів для вашого стилю та статусу. Елегантність, точність та стиль — у кожному з цих шедеврів</p>
           </div>
         </div>

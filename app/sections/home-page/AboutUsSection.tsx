@@ -4,7 +4,7 @@ const AboutUsSection = () => {
   return (
     <section
       id="about-us"
-      className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row  lg:py-[110px] "
+      className="container flex flex-col justify-between gap-[40px] items-center py-[80px] lg:gap-[100px] lg:flex-row lg:py-[110px] "
     >
       <div className="flex flex-col text-center lg:text-left lg:w-[500px]">
         <h2 className="font-frontrunner mb-6 text-[28px] md:text-[35px] lg:text-[45px]">

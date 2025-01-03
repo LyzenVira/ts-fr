@@ -56,7 +56,7 @@ const CartProduct = ({ card }: { card: CartProductProps }) => {
 
       <div className="flex-1 flex flex-col">
         <div className="flex items-center justify-between">
-          <h4 className="text-[12px] text-silver">{card.title}</h4>
+          <h4 className="text-silver">{card.title}</h4>
           <button onClick={(e) => onHandleClickDelete(e, card.id)}>
             <Image
               src={Delete}

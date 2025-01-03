@@ -72,7 +72,11 @@ const NewsSection = () => {
 
     const values = form.values;
 
-    const response = await addNewReceiver(values.name, values.email,setInfoMessage);
+    const response = await addNewReceiver(
+      values.name,
+      values.email,
+      setInfoMessage
+    );
 
     if (attempts < MAX_ATTEMPTS) {
       const newAttempts = attempts + 1;
@@ -130,9 +134,9 @@ const NewsSection = () => {
             розсилку
           </h3>
 
-          <p className="text-[10px] xl:text-default">
+          <p>
             Ми будемо інформувати вас про майбутні розіграші, пропозиції, хід
-            підготовки онлайн-магазину та початок продажів.
+            підготовки онлайн-магазину та початок продажів
           </p>
 
           <form
@@ -142,14 +146,17 @@ const NewsSection = () => {
             {isDisabled ? (
               <p className="text-red-500">Ви вичерпали всі спроби!</p>
             ) : (
-              <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+              attempts > 0 &&
+              attempts < MAX_ATTEMPTS && (
+                <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+              )
             )}
             <div className="flex flex-col gap-[30px] xl:flex-row xl:gap-[20px]">
               <div className="flex flex-col">
                 <Input
                   inputType="input"
                   required
-                  placeholder="І'мя"
+                  placeholder="Ім'я"
                   type="text"
                   errorType="warning"
                   {...form.getInputProps("name")}
@@ -168,7 +175,7 @@ const NewsSection = () => {
                 />
               </div>
             </div>
-            {value && <p className={`text-[14px] text-snow `}>{value}</p>}
+            {value && <p className="text-snow">{value}</p>}
             <Button
               text="Підписатись"
               type="submit"

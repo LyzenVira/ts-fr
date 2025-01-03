@@ -6,6 +6,7 @@ export type CardProps = {
   productType: string;
   price: number;
   vendor: string;
+  discount: number;
   image: string;
   options: Option[];
 };
@@ -28,6 +29,7 @@ export type Product = {
   handle: string;
   quantity: number;
   description: string;
+  discount: number;
   vendor: string;
   images: string[];
 };

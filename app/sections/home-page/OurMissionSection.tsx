@@ -26,10 +26,10 @@ const OurMissionSection = () => {
         </div>
 
         <div className="gap-[40px] py-[50px] mx-[18px] text-snow flex flex-col text-center items-center md:text-start md:items-start md:w-[328px] lg:w-[400px] md:mx-0 md:py-0 md:text-right">
-          <h1 className="font-frontrunner  leading-[50px] text-[28px] md:text-[35px] lg:text-[45px]">
+          <h1 className="font-frontrunner leading-[50px] text-[28px] md:text-[35px] lg:text-[45px]">
           Наше призначення
           </h1>
-          <div className="flex w-[80%] md:w-full flex-col font-poppins text-default gap-[10px]">
+          <div className="flex w-[80%] md:w-full flex-col font-poppins gap-[10px]">
             <p> Наш магазин спеціалізується на продажі стильних та надійних годинників, які підходять для будь-якої ситуації — від повсякденних до урочистих моментів.</p>
             <p> Ми прагнемо дарувати нашим клієнтам не тільки точність, але й емоційний зв’язок із часом, роблячи кожен момент особливим.</p>
           </div>

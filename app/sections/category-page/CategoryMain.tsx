@@ -12,7 +12,7 @@ import { getFilters } from "@/services/ProductService";
 import { useAlert } from "@/hooks/alertContext";
 
 export const ProductsContext = createContext<CardProps[]>([]);
-const LIMIT = 12; //24
+const LIMIT = 12;
 
 const CategoryMain = () => {
   const [filters, setFilters] = useState({});

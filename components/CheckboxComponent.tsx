@@ -20,7 +20,7 @@ const CheckboxComponent: FC<checkboxProps> = ({
   onChange,
 }) => {
   return (
-    <div className="flex flex-col my-[10px] mx-[10px] py-[30px] px-[25px] border-[1px] border-silver rounded cursor-pointer mini:w-[80%] w-[100%]">
+    <div className="flex flex-col my-[10px] mx-[10px] py-[30px] px-[25px] border-[1px] border-silver rounded cursor-pointer w-[100%] mini:w-[80%]">
       <div className="flex items-center" onClick={onChange}>
         <input
           type="radio"
@@ -29,13 +29,13 @@ const CheckboxComponent: FC<checkboxProps> = ({
           onChange={onChange}
         />
 
-        <div className="flex flex-col gap-[7px] ml-[15px] mini:flex-row mini:items-center mini:justify-between w-full">
-          <div className="md:text-[14px] text-[11px]">
+        <div className="flex flex-col gap-[7px] ml-[15px] lg:flex-row lg:items-center lg:justify-between w-full">
+          <div className=" text-[14px] md:text-[16px] xl:text-[18px]">
             <p className="whitespace-nowrap">{label}</p>
-            <p className="text-silver mini:whitespace-nowrap">{description}</p>
+            <p className={`text-silver ${className}`}>{description}</p>
           </div>
 
-          <p className="whitespace-nowrap">{price}</p>
+          <p className="whitespace-nowrap md:text-[16px] xl:text-[18px]">{price}</p>
         </div>
       </div>
       {children}

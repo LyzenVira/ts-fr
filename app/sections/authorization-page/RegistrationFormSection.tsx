@@ -84,6 +84,7 @@ const RegistrationFormSection = () => {
   const dayOptions = getDaysInMonth(month);
   const [visible, { toggle }] = useDisclosure(false);
   const { setInfoMessage } = useAlert();
+  const [isFailed, setIsFailed] = useState<boolean>(false);
 
   const registrationForm = useForm({
     initialValues: {
@@ -207,22 +208,28 @@ const RegistrationFormSection = () => {
         );
         setIsLoading(false);
         if (response === "created") {
+          setIsFailed(false);
           setIsModalVisible(true);
           registrationForm.reset();
         } else if (response == "A user with this phone number already exists") {
           setRegistrationMessage(
             "Цей номер телефону вже існує. Спробуйте інший."
           );
+          setIsFailed(true);
         } else if (
           response == "A user with this email address already exists"
         ) {
           setRegistrationMessage(
             "Ця електронна адреса вже існує. Спробуйте іншу."
           );
+          setIsFailed(true);
         } else if (response == "User not activated") {
           setRegistrationMessage(
             "Ваш акаунт не активовано. Перевірте свою електронну пошту."
           );
+          setIsFailed(true);
+        } else {
+          setIsFailed(true);
         }
       }
     }
@@ -242,7 +249,9 @@ const RegistrationFormSection = () => {
         <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
           Вперше на Montre d`Art ?
         </h2>
-        <p className="text-silver">Створити аккаунт</p>
+        <p className="text-silver text-[14px] md:text-[16px]">
+          Створити аккаунт
+        </p>
       </div>
 
       <div className="flex flex-col gap-[10px]">
@@ -380,11 +389,16 @@ const RegistrationFormSection = () => {
           </label>
         </div>
 
-        <div className=" mt-[16px]">
+        <div>
           {isDisabled ? (
-            <p className="text-red-500">Ви вичерпали всі спроби!</p>
+            <p className="mt-[16px] text-red-500">Ви вичерпали всі спроби!</p>
           ) : (
-            <p>Залишилось спроб: {MAX_ATTEMPTS - attempts}</p>
+            isFailed &&
+            attempts < MAX_ATTEMPTS && (
+              <p className="mt-[16px]">
+                Залишилось спроб: {MAX_ATTEMPTS - attempts}
+              </p>
+            )
           )}
         </div>
 

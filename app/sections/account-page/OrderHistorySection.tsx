@@ -76,17 +76,17 @@ const OrderHistorySection = () => {
   return (
     <>
       <div className="flex flex-col items-center gap-[10px] md:gap-[15px] mb-[44px]">
-        <h1 className="text-black text-[32px] md:text-[46px] font-medium">
+        <h1 className="text-black text-[36px] md:text-[52px] font-medium">
           Ваша історія замовлень
         </h1>
-        <p className="text-[12px] text-silver md:text-[14px] text-center">
+        <p className="text-[14px] text-silver md:text-[16px] text-center">
         Тут ви можете знайти підсумок своїх попередніх замовлень, відстежувати їх статус.
         </p>
       </div>
       {loading ? (
         <>
           {orders.length === 0 && (
-            <div className="flex justify-center font-bold text-[16px] md:text-[20px] lg:text-[24px] xl:text-[26px]">
+            <div className="flex justify-center font-bold text-[16px] md:text-[20px] lg:text-[28px] xl:text-[30px]">
               Немає замовлень
             </div>
           )}
@@ -101,17 +101,17 @@ const OrderHistorySection = () => {
                       <div
                         className="relative flex flex-row justify-between items-center"
                         onClick={() => toggleOrderDetails(order.id)}>
-                        <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-500">
+                        <span className="text-[12px] md:text-[14px] lg:text-[16px] text-gray-500">
                           {order.number}
                         </span>
-                        <span className="text-gray-700 text-[10px] md:text-[12px] lg:text-[14px]">
+                        <span className="text-gray-700 text-[12x] md:text-[14px] lg:text-[16px]">
                           {order.date}
                         </span>
                         <span
-                          className={`text-[10px] md:text-[12px] lg:text-[14px] py-1 px-2 rounded ${styles}`}>
+                          className={`text-[12px] md:text-[14px] lg:text-[16px] py-1 px-2 rounded ${styles}`}>
                           {text}
                         </span>
-                        <span className="text-[10px] md:text-[12px] lg:text-[14px] text-gray-800 font-semibold">
+                        <span className="text-[12px] md:text-[14px] lg:text-[16px] text-gray-800 font-semibold">
                           {order.total}
                         </span>
                         <Image
@@ -130,16 +130,16 @@ const OrderHistorySection = () => {
                         <Table className="w-full text-left text-gray-700">
                           <thead>
                             <tr>
-                              <th className="text-[10px] md:text-[12px] lg:text-[14px]">
+                              <th className="text-[12px] md:text-[14px] lg:text-[16px]">
                                 Товар
                               </th>
-                              <th className="text-[10px] md:text-[12px] lg:text-[14px] text-center">
+                              <th className="text-[12px] md:text-[14px] lg:text-[16px] text-center">
                                 Ціна
                               </th>
-                              <th className="text-[10px] md:text-[12px] lg:text-[14px] text-center">
+                              <th className="text-[12px] md:text-[14px] lg:text-[16px] text-center">
                                 Кількість
                               </th>
-                              <th className="text-[10px] md:text-[12px] lg:text-[14px] text-center">
+                              <th className="text-[12px] md:text-[14px] lg:text-[16px] text-center">
                                 Підсумок
                               </th>
                             </tr>
@@ -161,18 +161,18 @@ const OrderHistorySection = () => {
                                         {item.name}
                                       </p>
                                     </Link>
-                                    <p className="text-[10px] md:text-[12px] text-gray-500">
+                                    <p className="text-[12px] md:text-[14px] text-gray-500">
                                       {item.vendor}
                                     </p>
                                   </div>
                                 </td>
-                                <td className="text-center text-[10px] md:text-[12px] lg:text-[14px]">
+                                <td className="text-center text-[12px] md:text-[14px] lg:text-[16px]">
                                   {item.price}
                                 </td>
-                                <td className="text-center text-[10px] md:text-[12px] lg:text-[14px]">
+                                <td className="text-center text-[12px] md:text-[14px] lg:text-[16px]">
                                   {item.quantity}
                                 </td>
-                                <td className="text-center text-[10px] md:text-[12px] lg:text-[14px]">
+                                <td className="text-center text-[12px] md:text-[14px] lg:text-[16px]">
                                   {item.subtotal}
                                 </td>
                               </tr>
@@ -180,7 +180,7 @@ const OrderHistorySection = () => {
                           </tbody>
                         </Table>
                         <div className="border-t mt-4 pt-4 flex justify-end text-sm text-gray-700">
-                          <span className="font-bold text-[12px] md:text-[14px] lg:text-[16px]">
+                          <span className="font-bold text-[14px] md:text-[16px] lg:text-[18px]">
                             Сума: {order.total}
                           </span>
                         </div>

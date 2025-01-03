@@ -68,6 +68,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         height={365}
         alt={`Image${index + 1}`}
         loading="lazy"
+        className="w-[100%] h-[100%] object-cover"
       />
     </Carousel.Slide>
   ));
@@ -96,6 +97,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           productName,
           setInfoMessage
         );
+        console.log("d", productData);
         if (productData) {
           setProduct(productData);
           setQuantity(productData.quantity && productData.quantity > 0 ? 1 : 0);
@@ -180,7 +182,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
       />
       <TitleComponents
         text="product"
-        additionalText="Продукт номер один по якості"
+        additionalText="Продукт номер один за якістю"
       />
 
       <div className="flex flex-row items-start mx-[20px] lg:mx-[60px] mt-[30px]">
@@ -198,7 +200,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
       <div className="container flex flex-col md:flex-row gap-[100px] justify-items-center py-[30px] xl:py-[65px]">
         <div className="hidden xl:block xl:flex xl:flex-wrap xl:flex-row xl:gap-[30px]">
           {product?.images?.slice(1).map((item, index) => (
-            <img
+            <Image
               key={index}
               src={item}
               width={350}
@@ -237,8 +239,36 @@ const ProductSection: FC<productProps> = ({ productName }) => {
           </Carousel>
         </div>
 
-        <div className="flex flex-col items-center text-center">
-          <h2 className="text-[32px]">{product?.title}</h2>
+        <div className="flex flex-col items-center text-center font-poppins">
+          <h2 className="text-[36px]">{product?.title}</h2>
+
+          <div className="flex mt-[15px]">
+            {product && product?.discount > 0 ? (
+              <>
+                <span className="text-[16px] ml-[8px] my-[20px] text-[grey] line-through">
+                ₴{Number(
+                    Number(product?.price) / (1 - product?.discount / 100)
+                  ).toFixed(2)}
+                  
+                </span>
+
+                <span className="text-[24px] ml-[8px] mr-[10px] py-[10px]">
+                ₴{product?.price}
+                </span>
+
+                {product?.discount !== 0 && (
+                  <div className="bg-[red] text-white rounded-lg px-2 py-1 top-2 left-2 font-semibold h-fit my-[10px]">
+                    - {product?.discount}%
+                  </div>
+                )}
+              </>
+            ) : (
+              <span className="text-[20px]">
+                ₴{product?.price}
+              </span>
+            )}
+          </div>
+
           <p className="text-[14px] my-[20px] w-[350px] md:w-[400px] text-silver">
             {higherDescription ||
               "Цей годинник — ідеальне поєднання елегантності та функціональності. Високоякісні матеріали, стильний дизайн і точний механізм створюють неперевершене враження. Ідеальний аксесуар для будь-якого випадку"}
@@ -268,11 +298,11 @@ const ProductSection: FC<productProps> = ({ productName }) => {
 
           <hr className="block w-[400px]" />
 
-          <div className="flex my-[25px] space-x-[40px]">
-            <div className="flex items-center border-2 rounded-md w-fit overflow-hidden">
+          <div className="flex my-[25px] items-center space-x-[40px]">
+            <div className="flex items-center border-2 rounded-md overflow-hidden">
               <button
                 onClick={handleDecrement}
-                className={`w-11 h-12 rounded-sm border-r-2 ${
+                className={`w-[50px] h-[40px] border-r ${
                   quantity > 1 || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
@@ -280,12 +310,12 @@ const ProductSection: FC<productProps> = ({ productName }) => {
               >
                 -
               </button>
-              <span className="w-10 h-10 rounded-sm flex items-center justify-center">
+              <span className="w-[50px] h-[40px] flex items-center justify-center">
                 {quantity}
               </span>
               <button
                 onClick={handleIncrement}
-                className={`w-11 h-12 rounded-sm border-l-2 ${
+                className={`w-[50px] h-[40px] border-l ${
                   quantity < maxQuantity || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
@@ -298,16 +328,12 @@ const ProductSection: FC<productProps> = ({ productName }) => {
               )}
             </div>
 
-            <span className="text-[20px] px-[10px] py-[10px]">
-              {product?.price}₴
-            </span>
+            <Button
+              text="Place an order"
+              className="mini:w-[80%] w-[100%] px-[50px]"
+              onClick={() => handleAddToBasket(product?.id || "")}
+            />
           </div>
-
-          <Button
-            text="Place an order"
-            className="mini:w-[80%] w-[100%] px-[50px] mb-[10px]"
-            onClick={() => handleAddToBasket(product?.id || "")}
-          />
         </div>
       </div>
     </section>

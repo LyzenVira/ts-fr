@@ -90,7 +90,7 @@ const Header = () => {
             }}
           >
             {products.length > 0 && (
-              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[9px] bg-[red] text-white -right-3.5 -top-[3.2px]">
+              <div className="absolute rounded-full w-4 h-4 flex items-center justify-center text-[12px] bg-[red] text-white -right-3.5 -top-[3.2px]">
                 {products.length}
               </div>
             )}

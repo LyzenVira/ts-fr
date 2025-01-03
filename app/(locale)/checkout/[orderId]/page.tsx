@@ -14,7 +14,7 @@ export const generateViewport = () => ({
 const Page = () => {
   return (
     <>
-	 <p>LOX</p>
+	 <h1>Дякуємо за ваше замовлення</h1>
     </>
   );
 };

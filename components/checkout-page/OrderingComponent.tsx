@@ -46,7 +46,7 @@ const OrderingComponent: React.FC<OrderingComponentProps> = ({ message , title})
           <h1 className="font-frontrunner text-center text-black text-[28px] md:text-[32px] md:mb-[20px] lg:text-[42px] px-[10px]">
             {title}
           </h1>
-          <p className="text-center text-[#424551] font-poppins text-default text-[silver] px-[10px] mt-[5px] md:mt-0">
+          <p className="text-center text-[#424551] font-poppins text-[silver] px-[10px] mt-[5px] md:mt-0">
             {message}
           </p>
           <Button

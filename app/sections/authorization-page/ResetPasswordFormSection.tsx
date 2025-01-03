@@ -121,7 +121,7 @@ const ResetPasswordFormSection = ({
               <h2 className="text-[24px] md:text-[32px] lg:text-[48px] lg:mt-[20px] text-darkMaroon font-bold mb-[20px]">
                 ВІДНОВЛЕННЯ ПАРОЛЮ
               </h2>
-              <p className="leading-[2] text-silver">Введіть ваш новий пароль</p>
+              <p className="leading-[2] text-silver text-[14px] md:text-[16px]">Введіть ваш новий пароль</p>
             </div>
 
             <Input

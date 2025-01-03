@@ -5,7 +5,6 @@ import Watch from "@/images/hero-section/watch.jpg";
 
 import Pinterest from "@/images/social-networks/pinterest.svg";
 import Instagram from "@/images/social-networks/instagram.svg";
-import Twitter from "@/images/social-networks/twitter.svg";
 import Facebook from "@/images/social-networks/facebook.svg";
 
 import Button from "@/components/ButtonComponent";
@@ -15,9 +14,9 @@ interface HeroProps {
 }
 
 const SocialObject = [
-  { href: "https://www.pinterest.com/", title: "Pinterest", image: Pinterest },// tik tok
-  { href: "https://www.instagram.com/", title: "Instagram", image: Instagram },
-  { href: "https://www.facebook.com/", title: "Facebook", image: Facebook },
+  { href: "https://www.tiktok.com/@montre_d.art_", title: "Pinterest", image: Pinterest }, //! tik tok
+  { href: "https://www.instagram.com/montre_d.art_", title: "Instagram", image: Instagram },
+  { href: "https://www.facebook.com/montre_d.art_", title: "Facebook", image: Facebook },
 ];
 
 const Links: FC<HeroProps> = ({ className }) => {
@@ -62,7 +61,7 @@ const HeroSection: FC = () => {
             Знайди свій годинник мрії
           </h1>
 
-          <p className="text-silver font-poppins md:text-[14px] lg:text-left mb-[30px]">
+          <p className="text-silver font-poppins lg:text-left mb-[30px]">
             Відкрий для себе ідеальне поєднання стилю, точності та якості.
             Обирай серед вишуканих моделей, що підкреслять твій індивідуальний
             смак та доповнять будь-який образ. Твій час, твій стиль, твій

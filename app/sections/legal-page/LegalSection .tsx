@@ -69,11 +69,11 @@ const LegalSection = () => {
             ))}
           </div>
         </div>
-        <div className="flex flex-col items-center py-[40px] px-[20px] rounded-lg gap-[10px]">
-          <h3 className="text-[24px] md:text-[36px] font-semibold text-white ">
+        <div className="flex flex-col items-center py-[40px] px-[20px] rounded-lg gap-[10px] text-center">
+          <h3 className="text-[24px] md:text-[36px] font-semibold text-white">
             Не можете знайти відповідь?
           </h3>
-          <p className="text-white text-center mb-[10px]">
+          <p className="text-white mb-[10px]">
 				Зв'яжіться з нашою командою підтримки і ви отримаєте відповідь меньше ніж за 24 години 
           </p> 
           <Button text="Контакти" tag="a" href="/contact-us" background="onyx" type="submit"/>

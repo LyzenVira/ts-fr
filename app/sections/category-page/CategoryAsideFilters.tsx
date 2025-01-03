@@ -224,7 +224,7 @@ const CategoryAsideFilters = ({
         <FiltersSkeleton />
       ) : (
         <>
-          <aside className="hidden w-[480px] xl:block xl:bg-pearl pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
+          <aside className="hidden w-[480px] xl:block pt-[43px] pb-[93px] pl-[30px] pr-[50px]">
             <form
               onSubmit={handleSubmitFormForPc}
               className="pb-5 flex flex-col gap-5 font-poppins ">
@@ -274,7 +274,7 @@ const CategoryAsideFilters = ({
               <div className="flex flex-row gap-[10px]">
                 <Button
                   text="Скидання"
-                  className="w-[30%] text-[16px] font-medium"
+                  className="w-[30%] font-medium"
                   type="submit"
                   background="white"
                   bordered
@@ -282,18 +282,18 @@ const CategoryAsideFilters = ({
                 />
                 <Button
                   text="Підтверження"
-                  className="w-[70%] text-[16px] font-medium "
+                  className="w-[70%] font-medium "
                   type="submit"
                 />
               </div>
             </form>
           </aside>
 
-          <div className="z-20 top-0 xl:hidden bg-pearl">
-            <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-pearl z-20">
+          <div className="z-20 top-0 xl:hidden">
+            <div className="lg:px-[125px] md:px-[75px] px-5 absolute w-full bg-white z-20">
               <form onSubmit={handleSubmitFormForMobile}>
                 <motion.div
-                  className={`bg-pearl pb-5 flex flex-col gap-5 font-poppins h-fit ${
+                  className={`pb-5 flex flex-col gap-5 font-poppins h-fit ${
                     isOpen ? "pt-5" : ""
                   }`}
                   initial={{
@@ -362,7 +362,7 @@ const CategoryAsideFilters = ({
                     <div className="flex flex-row gap-[10px]">
                       <Button
                         text="Скидання"
-                        className="w-[30%] text-[12px] md:text-[14px] font-medium"
+                        className="w-[30%] text-[14px] md:text-[16px] font-medium"
                         type="submit"
                         background="white"
                         bordered
@@ -370,7 +370,7 @@ const CategoryAsideFilters = ({
                       />
                       <Button
                         text="Підтверження"
-                        className=" md:px-[50px] w-[60%] md:w-[70%] text-[12px] md:text-[14px] font-default "
+                        className=" md:px-[50px] w-[60%] md:w-[70%] text-[14px] md:text-[16px] font-default "
                         type="submit"
                         onClick={handleSubmitFilters}
                       />

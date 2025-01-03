@@ -191,7 +191,7 @@ const BasicInfoSection: FC<{
   };
 
   return (
-    <div id="info">
+    <div id="info" className="font-poppins">
       <FormComponent
         title="Інформація"
         className="items-center"
@@ -218,7 +218,7 @@ const BasicInfoSection: FC<{
             {error && <p className="text-darkBurgundy text-[14px]">{error}</p>}
           </>
         )}
-        <p className="mx-[25px] font-semibold text-silver mini:w-[80%] md:w-[85%] lg:w-[91%]">
+        <p className="mx-[25px] font-semibold text-silver text-[18px] mini:w-[80%] md:w-[85%] lg:w-[91%]">
           Дані отримувача
         </p>
 

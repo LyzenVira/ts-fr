@@ -14,7 +14,7 @@ const TitleComponents = ({ text, additionalText = "" }: TitleProps) => {
             className={`font-frontrunner text-snow text-[24px] leading-[25px] mb-4 md:text-[30px] md:mb-[20px] lg:text-[35px] lg:mb-[25px] text-left`}>
             {text}
           </h1>
-          <p className="text-pearl font-[8px] leading-3 md:text-[12px] lg:text-[14px]">
+          <p className="text-pearl font-[8px] leading-3 md:text-[14px] lg:text-[16px]">
             {additionalText}
           </p>
         </>
