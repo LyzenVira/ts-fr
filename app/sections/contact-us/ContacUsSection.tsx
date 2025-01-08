@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { Alert } from "flowbite-react";
+import { motion } from "framer-motion";
 import { TfiAlert } from "react-icons/tfi";
 import { FiCheckCircle } from "react-icons/fi";
 import React, { useState, useEffect } from "react";
@@ -14,6 +15,7 @@ import { sendEmailToUs } from "@/services/SubscribeService";
 
 import Message from "@/images/contact-us/message.svg";
 import ContactUsImage from "@/images/contact-us/contact-us.jpg";
+import Link from "next/link";
 
 const ContactUsSection = () => {
   const MAX_ATTEMPTS = 3;
@@ -26,6 +28,43 @@ const ContactUsSection = () => {
     text: string;
   } | null>(null);
   const { setInfoMessage } = useAlert();
+  const [showCloud, setShowCloud] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [showButton, setShowButton] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 1023.99);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const footerElement = document.querySelector("footer");
+      if (footerElement) {
+        const footerPosition = footerElement.getBoundingClientRect().top;
+        if (footerPosition <= window.innerHeight) {
+          setShowButton(false);
+        } else {
+          setShowButton(true);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowCloud(true);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const form = useForm({
     initialValues: {
@@ -205,14 +244,38 @@ const ContactUsSection = () => {
               />
             </form>
           </div>
-          <div className="hidden cursor-pointer absolute py-[11px] px-[17px] bg-darkBurgundy rounded-full left-[49%] top-[45%] lg:block xl:py-[21px] xl:px-[27px] xl:left-[58%] xl:top-[40%] hover:scale-110 transition-transform duration-300">
-            <Image
-              src={Message}
-              alt="message"
-              className="lg:w-[45px] lg:h-[56px] transition-transform duration-300"
-              width={60}
-              height={71}
-            />
+          <div
+            className={`hidden cursor-pointer absolute py-[11px] px-[17px] transition duration-300 rounded-full left-[49%] top-[45%] lg:block xl:py-[15px] xl:px-[21px] xl:left-[58%] xl:top-[40%] group ${
+              showCloud
+                ? "bg-blue-500 hover:bg-blue-600 transition duration-300 ease-out"
+                : "bg-darkBurgundy"
+            }`}
+          >
+            {showCloud && (
+              <motion.div
+                className="absolute lg:left-[80%] lg:top-[-80%] xl:right-[-230%] xl:top-[-70%] bg-white text-darkBurgundy p-3 rounded-lg shadow-lg w-[250px]"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              >
+                <p className="text-sm font-medium">
+                  Напишіть нам у Telegram для швидкої допомоги!
+                </p>
+              </motion.div>
+            )}
+            <Link
+              href="https://t.me/Montre_dArt_bot"
+              target="_blank"
+              className=""
+            >
+              <Image
+                src={Message}
+                alt="message"
+                className="lg:w-[40px] lg:h-[53px] transition-transform duration-300"
+                width={60}
+                height={71}
+              />
+            </Link>
           </div>
           <div className="w-[90%] lg:w-[47%] xl:w-[50%] flex justify-end">
             <Image
@@ -225,6 +288,40 @@ const ContactUsSection = () => {
             />
           </div>
         </div>
+
+        {isMobile && showButton && (
+          <div className="fixed bottom-3 right-3 z-10">
+            <div
+              className={`cursor-pointer py-1 px-3 md:py-3 md:px-3 transition duration-300 rounded-full ${
+                showCloud
+                  ? "bg-blue-500 hover:bg-blue-600 transition duration-300 ease-out"
+                  : "bg-darkBurgundy"
+              }`}
+            >
+              {showCloud && (
+                <motion.div
+                  className="absolute left-[-370%] border bottom-10 md:bottom-[70%] bg-white text-darkBurgundy p-2 rounded-lg shadow-lg w-[185px] md:w-[240px]"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                >
+                  <p className="text-[11px] md:text-[14px] font-medium">
+                    Напишіть нам у Telegram для швидкої допомоги!
+                  </p>
+                </motion.div>
+              )}
+              <Link href="https://t.me/Montre_dArt_bot" target="_blank">
+                <Image
+                  src={Message}
+                  alt="message"
+                  className="w-6 h-10 md:w-10 md:h-10 transition-transform duration-300"
+                  width={40}
+                  height={53}
+                />
+              </Link>
+            </div>
+          </div>
+        )}
       </section>
     </>
   );

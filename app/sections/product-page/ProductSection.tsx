@@ -180,7 +180,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
       />
       <TitleComponents
-        text="product"
+        text="продукт"
         additionalText="Продукт номер один за якістю"
       />
 
@@ -261,7 +261,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 )}
               </>
             ) : (
-              <span className="text-[20px]">
+              <span className="text-[24px] font-semibold">
                 ₴{product?.price}
               </span>
             )}

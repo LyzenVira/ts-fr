@@ -120,7 +120,7 @@ const Header = () => {
 
   const HeaderLogo = () => {
     return (
-      <Link href="/">
+      <Link href="/" onClick={close}>
         <Image src={Logo} alt="Logo" loading="lazy" />
       </Link>
     );

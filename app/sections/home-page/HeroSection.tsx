@@ -3,9 +3,9 @@ import Link from "next/link";
 import Image from "next/image";
 import Watch from "@/images/hero-section/watch.jpg";
 
-import Pinterest from "@/images/social-networks/pinterest.svg";
-import Instagram from "@/images/social-networks/instagram.svg";
+import Tiktok from "@/images/social-networks/tiktok.svg";
 import Facebook from "@/images/social-networks/facebook.svg";
+import Instagram from "@/images/social-networks/instagram.svg";
 
 import Button from "@/components/ButtonComponent";
 
@@ -14,7 +14,7 @@ interface HeroProps {
 }
 
 const SocialObject = [
-  { href: "https://www.tiktok.com/@montre_d.art_", title: "Pinterest", image: Pinterest }, //! tik tok
+  { href: "https://www.tiktok.com/@montre_d.art_", title: "Tiktok", image: Tiktok },
   { href: "https://www.instagram.com/montre_d.art_", title: "Instagram", image: Instagram },
   { href: "https://www.facebook.com/montre_d.art_", title: "Facebook", image: Facebook },
 ];
