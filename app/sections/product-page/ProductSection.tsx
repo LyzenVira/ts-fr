@@ -59,6 +59,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
   const [product, setProduct] = useState<Product>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { setInfoMessage } = useAlert();
+  const { addToCart, isOpen, changeOpenState } = useCart();
 
   const slides = product?.images?.slice(1).map((item, index) => (
     <Carousel.Slide key={index}>
@@ -136,8 +137,6 @@ const ProductSection: FC<productProps> = ({ productName }) => {
       });
     }
   }
-
-  const { addToCart, isOpen, changeOpenState } = useCart();
 
   const handleAddToBasket = (id: string) => {
     !isOpen && changeOpenState(true);
@@ -233,8 +232,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                 width={80}
                 className="my-[30px] mr-[50px] md:mr-[20px]"
               />
-            }
-          >
+            }>
             {slides}
           </Carousel>
         </div>
@@ -306,8 +304,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity > 1 || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}
-              >
+                }`}>
                 -
               </button>
               <span className="w-[50px] h-[40px] flex items-center justify-center">
@@ -319,8 +316,7 @@ const ProductSection: FC<productProps> = ({ productName }) => {
                   quantity < maxQuantity || isOutOfStock
                     ? "hover:bg-white bg-gray-200"
                     : "bg-white"
-                }`}
-              >
+                }`}>
                 +
               </button>
               {isOutOfStock && (

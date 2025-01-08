@@ -97,8 +97,8 @@ export const activateAccount = async (
 };
 
 export const updateUser = async (userData: any): Promise<any> => {
-    const res = await api.post(`/auth/update`, userData);
-    return res.status;
+  const res = await api.post(`/auth/update`, userData);
+  return res.status;
 };
 
 export const updatePassword = async (newPassword: string): Promise<any> => {
@@ -108,14 +108,12 @@ export const updatePassword = async (newPassword: string): Promise<any> => {
   return res;
 };
 
-
 export const updateRefreshToken = async (
   setInfoMessage?: (message: InfoMessage) => void
 ): Promise<any> => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
     const res = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken });
-
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -133,26 +131,45 @@ export const updateRefreshToken = async (
 };
 
 export const getUser = async (): Promise<any> => {
-    const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("accessToken");
 
-    const res = await api.get(`/auth/user`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return res.data;
+  const res = await api.get(`/auth/user`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  return res.data;
 };
 
-// export const googleLogin = async (googleToken: string): Promise<any> => {
-//   try {
-//     const res = await axios.post(`${BASE_URL}/auth/google`, {
-//       token: googleToken,
-//     });
-//     return res.data;
-//   } catch (error) {
-//     console.error("Error during Google login:", error);
-//   }
-// };
+export const googleLogin = async (
+  googleToken: any,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
+  try {
+    const response = await axios.post(`${BASE_URL}/auth/google`, {
+      token: googleToken,
+    });
+    if (response?.data?.accessToken && response?.data?.refreshToken) {
+      const { accessToken, refreshToken } = response.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      return response.status;
+    }
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 409 || error.status === 400) {
+        return error.response?.data;
+      }
+    }
+  }
+};
 
 // export const facebookLogin = async (facebookToken: string): Promise<any> => {
 //   try {
@@ -164,3 +181,60 @@ export const getUser = async (): Promise<any> => {
 //     console.error("Error during Facebook login:", error);
 //   }
 // };
+
+export const linkAccount = async (
+  type: string,
+  token: any,
+  email: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
+  try {
+    const res = await api.post(`${BASE_URL}/account/link-account`, {
+      type: type,
+      token: token,
+      user: email,
+    });
+    return res.status;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 409 || error.status === 400) {
+        return error.response?.data;
+      }
+    }
+  }
+};
+
+export const unlinkAccount = async (
+  type: string,
+  userEmail: string,
+  setInfoMessage?: (message: InfoMessage) => void
+): Promise<any> => {
+  try {
+    const res = await api.post(`${BASE_URL}/account/unlink-account`, {
+      type: type,
+      user: userEmail,
+    });
+    console.log(res);
+    return res.status;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.status === 500 || error.code === "ERR_NETWORK") {
+        if (setInfoMessage) {
+          setInfoMessage({
+            type: "error",
+            text: "Ой! Сталася помилка на сервері!",
+          });
+        }
+      } else if (error.status === 409 || error.status === 400) {
+        return error.response?.data;
+      }
+    }
+  }
+};

@@ -5,6 +5,8 @@ import { TfiAlert } from "react-icons/tfi";
 import { FiCheckCircle } from "react-icons/fi";
 import { useDisclosure } from "@mantine/hooks";
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { useGoogleLogin, TokenResponse } from "@react-oauth/google";
 
 import { City } from "@/config/types";
 import { useAlert } from "@/hooks/alertContext";
@@ -14,6 +16,10 @@ import { getCities } from "@/services/ShippingService";
 import LoaderComponent from "@/components/LoaderComponent";
 import { getUser, updatePassword, updateUser } from "@/services/AuthService";
 import { addNewReceiver, removeReceiver } from "@/services/SubscribeService";
+import { linkAccount, unlinkAccount } from "@/services/AuthService";
+import BuketIcon from "@/images/cart-component/delete.svg";
+import GoogleIcon from "@/images/vectors/google-color.svg";
+import FacebookIcon from "@/images/vectors/facebook-color.svg";
 
 const MyAccountSection = () => {
   const months = [
@@ -91,7 +97,9 @@ const MyAccountSection = () => {
     text: string;
   } | null>(null);
   const { setInfoMessage } = useAlert();
-
+  const [googleAccount, setGoogleAccount] = useState("");
+  // const [facebookAccount, setFacebookAccount] = useState("");
+  const [userEmail, setUserEmail] = useState("");
   const form = useForm({
     initialValues: {
       name: "",
@@ -163,6 +171,9 @@ const MyAccountSection = () => {
         const userMonth = user.dateOfBirth?.split(",")[0] || "";
         const userDay = user.dateOfBirth?.split(",")[1]?.trim() || "";
         const userAddress1 = user.address?.split("&")[0]?.trim() || "";
+        setUserEmail(user.email);
+        setGoogleAccount(user.google || "");
+        // setFacebookAccount(user.facebook || "");
         form.setValues({
           name: user.firstName || "",
           fullname: user.lastName || "",
@@ -196,6 +207,62 @@ const MyAccountSection = () => {
       form.setFieldValue("phone", "");
     }
   }, [form.values.phone]);
+
+  const handleLinkAccount = async (type: "google" | "facebook", token: any) => {
+    setLoading(true);
+    const response = await linkAccount(type, token, userEmail);
+    if (response === 200) {
+      const { user } = await getUser();
+      setGoogleAccount(user.google || "");
+      setMessage({
+        type: "success",
+        text: "Обліковий запис успішно під'єднано",
+      });
+      setLoading(false);
+    } else {
+      setMessage({
+        type: "error",
+        text: "Не вдалося під'єднати обліковий запис",
+      });
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLink = useGoogleLogin({
+    onSuccess: async (tokenResponse: TokenResponse) => {
+      await handleLinkAccount("google", tokenResponse);
+    },
+    onError: () => setMessage({
+        type: "error",
+        text: "Помилка сервера google",
+      }),
+  });
+
+  const handleUnlinkAccount = async (type: "google" | "facebook") => {
+    setLoading(true);
+    const response = await unlinkAccount(type, userEmail);
+
+    if (response === 200) {
+      setGoogleAccount("");
+      setMessage({
+        type: "success",
+        text: "Обліковий запис успішно від'єднано",
+      });
+      setLoading(false);
+    } else if (response === "Can not unlink without password") {
+      setMessage({
+        type: "error",
+        text: "Спершу встановіть пароль",
+      });
+      setLoading(false);
+    } else {
+      setMessage({
+        type: "error",
+        text: "Не вдалося від'єднати обліковий запис",
+      });
+      setLoading(false);
+    }
+  };
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -415,7 +482,7 @@ const MyAccountSection = () => {
             </div>
           </div>
 
-          <div className="w-full  bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
+          <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col py-[30px] px-[37px]">
             <h2 className="mb-[20px] text-[24px] text-silver">Моя адреса</h2>
 
             <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
@@ -463,6 +530,70 @@ const MyAccountSection = () => {
           </div>
           <Button text="Оновити" className="mt-[-20px]" type="submit" />
         </form>
+
+        <div className="w-full bg-snow border border-whisper border-solid rounded-lg flex flex-col mt-[46px] py-[30px] px-[37px]">
+          <h2 className="mb-[20px] text-[24px] text-silver">
+            Прив'язані аккаунти
+          </h2>
+          <div className="flex flex-wrap justify-center gap-y-[20px] lg:gap-y-[36px] gap-x-[50px]">
+            <div className="w-full flex items-center justify-between border border-solid border-gray-300 py-[16px] px-[30px] rounded-[5px] lg:mx-[19px] xl:mx-[40px]">
+              <Image
+                src={GoogleIcon}
+                alt="Google icon"
+                width={22}
+                height={22}
+              />
+              {googleAccount ? (
+                <div className="flex items-center gap-4">
+                  <p>{googleAccount}</p>
+                  <Image
+                    src={BuketIcon}
+                    alt="Unlink"
+                    width={20}
+                    height={20}
+                    className="object-fit h-5 w-5 hover:scale-110 duration-300"
+                    onClick={() => handleUnlinkAccount("google")}
+                  />
+                </div>
+              ) : (
+                <span
+                  className="cursor-pointer hover:text-darkBurgundy"
+                  onClick={() => handleGoogleLink()}
+                >
+                  Підв'язати
+                </span>
+              )}
+            </div>
+            {/* <div className="w-full flex items-center justify-between border border-solid border-gray-300 py-[16px] px-[30px] rounded-[5px] lg:mx-[19px] xl:mx-[40px]">
+              <Image
+                src={FacebookIcon}
+                alt="Facebook icon"
+                width={22}
+                height={22}
+              />
+              {facebookAccount ? (
+                <div className="flex items-center gap-4">
+                  <p>{facebookAccount}</p>
+                  <Image
+                    src={BuketIcon}
+                    alt="Unlink"
+                    width={20}
+                    height={20}
+                    className="object-fit h-5 w-5 hover:scale-110 duration-300"
+                    onClick={() => handleUnlinkAccount("facebook")}
+                  />
+                </div>
+              ) : (
+                <span
+                  className="cursor-pointer hover:text-darkBurgundy"
+                  onClick={() => handleLinkAccount("facebook")}
+                >
+                  Підв'язати
+                </span>
+              )}
+            </div> */}
+          </div>
+        </div>
 
         <form
           className="flex flex-col items-center gap-[46px] mt-[46px] lg:items-end"

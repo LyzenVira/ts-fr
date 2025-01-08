@@ -3,12 +3,14 @@ import { useRouter } from "next/navigation";
 import { useDisclosure } from "@mantine/hooks";
 import { useForm,isEmail } from "@mantine/form";
 import React, { useEffect, useState } from "react";
+import { useGoogleLogin, TokenResponse } from "@react-oauth/google"
+// import FacebookLogin from 'react-facebook-login';
 
 import { useAlert } from "@/hooks/alertContext";
 import Input from "@/components/InputComponent";
 import Button from "@/components/ButtonComponent";
-import { loginUser } from "@/services/AuthService";
 import LoaderComponent from "@/components/LoaderComponent";
+import { googleLogin, loginUser } from "@/services/AuthService";
 
 const LoginFormSection = () => {
   const router = useRouter();
@@ -78,6 +80,36 @@ const LoginFormSection = () => {
       else{
         setLoginMessage("Користувача з такою електронною адресою не існує.");
       }
+    }
+  };
+
+  const handleFacebookSignIn = async () => {
+    setIsLoading(true);
+  };
+
+  const handleGoogleSignIn = useGoogleLogin({
+    onSuccess: async (tokenResponse: TokenResponse) => {
+      await handleGoogle(tokenResponse);
+    },
+    onError: () => setLoginMessage("Login with Google failed"),
+  });
+
+  const handleGoogle = async (tokenResponse: TokenResponse) => {
+    setIsLoading(true);
+    const response = await googleLogin(tokenResponse);
+    setIsLoading(false);
+    if (response === 200) {
+      loginForm.reset();
+      router.push("/account");
+      setLoginMessage(null);
+    } else if (response === "Error with google server") {
+      setLoginMessage("Помилка сервера Google.");
+    } else if (response === "Can not login with google") {
+      setLoginMessage("Увійти через Google неможливо. Спробуйте увійти за допомогою пароля.");
+    } else if (response == "A user with this email address already exists") {
+      setLoginMessage("Увійти через Google неможливо. Спробуйте увійти за допомогою пароля.");
+    } else {
+      setLoginMessage("Помилка сервера.");
     }
   };
 
@@ -155,9 +187,28 @@ const LoginFormSection = () => {
         <Button
           text="Увійти"
           type="button"
-          className="!w-[208px] mx-auto mt-[8px] mb-[46px]"
+          className="!w-[208px] mx-auto mt-[8px]"
           onClick={handleSignIn}
         />
+
+        <p className="mt-[28px] font-bold text-[20px]">Швидка авторизація</p>
+
+        <div className="mt-[18px] mb-[46px] flex flex-col lg:flex-row gap-[10px] text-[20px] font-bold">
+          <Button
+            text="Google"
+            type="button"
+            className="!w-[312px] h-[56px] mx-auto"
+            icon="google"
+            onClick={handleGoogleSignIn}
+          />
+           {/* <Button
+            text="Facebook"
+            type="button"
+            className="!w-[312px] h-[56px] mx-auto"
+            icon="facebook"
+            onClick={handleFacebookSignIn}
+          /> */}
+        </div>
       </div>
     </>
   );

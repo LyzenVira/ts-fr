@@ -101,8 +101,10 @@ const RegistrationFormSection = () => {
       registrationMessage: "",
     },
     validate: {
-      firstName: hasLength({ min: 2 }, "Має бути не менше 2 символів"),
-      lastName: hasLength({ min: 2 }, "Має бути не менше 2 символів"),
+      firstName: hasLength({ min: 3 }, "Має бути не менше 3 символів"),
+      lastName: hasLength({ min: 3 }, "Має бути не менше 3 символів"),
+      month: (value) => (value ? null : "Необхідно заповнити місяць"),
+      date: (value) => (value ? null : "Необхідно заповнити день"),
       email: isEmail("Невірна електронна адреса"),
       confirmEmail: (value, values) =>
         value !== values.email ? "Електронні адреси повинні співпадати" : null,
@@ -278,19 +280,22 @@ const RegistrationFormSection = () => {
         />
 
         <p className="text-start text-silver mt-[6px]">Дата народження</p>
-        <div className="flex flex-col lg:flex-row gap-[10px] text-left">
+        <div className="flex flex-col lg:flex-row gap-[10px] text-left text-center">
           <Input
             placeholder="Місяць"
             inputType="select"
             className="!w-full"
             bordered={true}
             options={months}
-            value={month}
             scrollable={true}
+            value={registrationForm.values.month}
             onSelect={(value) => {
               setMonth(value);
-              registrationForm.setFieldValue("moth", value);
+              registrationForm.setFieldValue("month", value);
             }}
+            {...registrationForm.getInputProps("month")}
+            errorType="critical"
+            required={true}
           />
 
           <Input
@@ -305,6 +310,9 @@ const RegistrationFormSection = () => {
               setDay(value);
               registrationForm.setFieldValue("date", value);
             }}
+            {...registrationForm.getInputProps("date")}
+            errorType="critical"
+            required={true}
           />
         </div>
         <Input

@@ -1,15 +1,14 @@
 "use client";
-
 import React, { useState, createContext, useEffect } from "react";
 
-import TitleComponents from "@/components/TitleComponents";
-import CategoryAsideFilters from "./CategoryAsideFilters";
-import CategorySection from "./CategorySection";
 import { CardProps } from "@/config/types";
-
-import { PaginationProvider } from "@/hooks/useCustomPagination";
-import { getFilters } from "@/services/ProductService";
+import CategorySection from "./CategorySection";
 import { useAlert } from "@/hooks/alertContext";
+import { getFilters } from "@/services/ProductService";
+import CategoryAsideFilters from "./CategoryAsideFilters";
+import TitleComponents from "@/components/TitleComponents";
+import { PaginationProvider } from "@/hooks/useCustomPagination";
+
 
 export const ProductsContext = createContext<CardProps[]>([]);
 const LIMIT = 12;

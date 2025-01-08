@@ -74,7 +74,7 @@ const CardComponent: FC<CardProps> = ({
 
       <Link
         href={`/catalog/${handle}`}
-        className="mt-5 mb-4 text-silver hover:scale-110 hover:font-bold duration-300"
+        className="mt-5 mb-4 text-silver text-default hover:scale-110 hover:font-bold duration-300"
       >
         {title}
       </Link>
