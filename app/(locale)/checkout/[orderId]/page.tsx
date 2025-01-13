@@ -1,3 +1,4 @@
+import SuccessOrderingSection from "@/app/sections/checkout-page/SuccessOrderingSection";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -14,9 +15,9 @@ export const generateViewport = () => ({
 
 const Page = () => {
   return (
-    <>
-	 <h1>Дякуємо за ваше замовлення</h1>
-    </>
+      <>
+      <SuccessOrderingSection orderId="12345678"/>
+      </>
   );
 };
 

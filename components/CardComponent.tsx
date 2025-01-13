@@ -45,7 +45,7 @@ const CardComponent: FC<CardProps> = ({
     <div className="relative flex flex-col items-center font-poppins">
       <div className="relative rounded-md overflow-hidden">
         {discount !== 0 && (
-          <div className="absolute z-20 bg-[red] text-white rounded-md px-2 py-1 top-2 left-2 font-semibold">
+          <div className="absolute z-10 bg-[red] text-white rounded-md px-2 py-1 top-2 left-2 font-semibold">
             - {discount}%
           </div>
         )}
